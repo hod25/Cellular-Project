@@ -2,10 +2,7 @@ package com.example.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +21,12 @@ class MainActivity : AppCompatActivity() {
         val registerButton: Button = findViewById(R.id.registerButton)
         registerButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+        // Navigate to Register Screen
+        val editUserButton: Button = findViewById(R.id.editUserButton)
+        editUserButton.setOnClickListener {
+            val intent = Intent(this, EditUserActivity::class.java)
             startActivity(intent)
         }
     }

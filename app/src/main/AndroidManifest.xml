@@ -35,6 +35,13 @@
                 <action android:name="com.example.myapplication.LOGIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EditUserActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.myapplication.EDITUSER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

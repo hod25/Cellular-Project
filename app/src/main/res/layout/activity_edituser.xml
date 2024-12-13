@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="36dp"
+    android:paddingHorizontal="32dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/appTitleEditUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dish_for"
+            android:textSize="64sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="18dp"
+            android:textColor="@color/title"
+            android:minHeight="48dp"/>
+
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="150dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="64dp"
+            android:contentDescription="@string/avatar"
+            android:scaleType="centerCrop"
+            android:src="@drawable/avatar"
+            android:background="@drawable/image_platform"/>
+
+
+
+
+        <!-- GridLayout עבור שדות הקלט -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <!-- טקסט לצד שדה הקלט הראשון -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email_colon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="108dp" />
+
+            <EditText
+                android:id="@+id/emailEditUser"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/text_fields"
+                android:paddingStart="16dp"
+                android:textColor="@color/cream"
+                android:paddingEnd="16dp"
+                android:minHeight="48dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- טקסט לצד שדה הקלט השני -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/background"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp" />
+
+            <EditText
+                android:id="@+id/backgroundEditUser"
+                android:layout_width="160dp"
+                android:textColor="@color/cream"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/text_fields"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:minHeight="48dp"
+                android:layout_marginTop="8dp" />
+        </GridLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Title: Tags -->
+            <TextView
+                android:id="@+id/tagsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tags"
+                android:textSize="24sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <!--<LinearLayout -->
+            <!-- Tags container: will hold the dynamic tags -->
+
+                <!--android:orientation="vertical" -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:id="@+id/tagsRecyclerView"
+                app:layout_constraintStart_toEndOf="@id/tagsTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/addTagButton"/>
+
+            <LinearLayout
+                android:id="@+id/tagSelectionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@android:color/white"
+                android:elevation="4dp"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/tagsRecyclerView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/addTagButton">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tagSelectionRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+            <!-- כפתור הוספת תגיות -->
+            <Button
+                android:backgroundTint="@color/gold"
+                android:id="@+id/addTagButton"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingBottom="0dp"
+                android:paddingHorizontal="0dp"
+                android:text="@string/plus"
+                android:textSize="24sp"
+                android:layout_width="48dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@id/tagsRecyclerView"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset_password"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:minHeight="16dp" />
+
+        <Button
+            android:id="@+id/saveUserChanges"
+            android:backgroundTint="@color/blue"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="48dp"
+            android:shadowColor="#000000"
+            android:shadowDx="8"
+            android:shadowDy="2"
+            android:shadowRadius="1.6"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</ScrollView>

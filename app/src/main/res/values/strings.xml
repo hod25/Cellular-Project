@@ -12,4 +12,12 @@
     <string name="have_an_account">Have an account?</string>
     <string name="not_have_an_account">Don’t have an account yet?</string>
     <string name="forgot_password">forgot your password?</string>
+    <string name="edit_user">Edit User</string>
+    <string name="avatar">avatar</string>
+    <string name="plus">+</string>
+    <string name="save">Save</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="tags">Tags:</string>
+    <string name="email_colon">Email:</string>
+    <string name="background">Background:</string>
 </resources>
