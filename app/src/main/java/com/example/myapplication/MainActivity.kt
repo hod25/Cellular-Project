@@ -14,11 +14,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Navigate to Login Screen
-        /*val loginButton: Button = findViewById(R.id.loginButton)
+        val loginButton: Button = findViewById(R.id.loginButton)
         loginButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-        }*/
+        }
 
         // Navigate to Register Screen
         val registerButton: Button = findViewById(R.id.registerButton)

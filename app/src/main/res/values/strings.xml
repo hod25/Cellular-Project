@@ -10,4 +10,6 @@
     <string name="confirm_password">Confirm Password*</string>
     <string name="sign_up">Sign Up!</string>
     <string name="have_an_account">Have an account?</string>
+    <string name="not_have_an_account">Don’t have an account yet?</string>
+    <string name="forgot_password">forgot your password?</string>
 </resources>

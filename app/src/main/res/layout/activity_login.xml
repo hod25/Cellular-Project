@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/appTitleRegister"
+            android:id="@+id/appTitleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dish_for"
@@ -25,10 +25,10 @@
             android:minHeight="48dp"/>
 
         <TextView
-            android:id="@+id/registerTitle"
+            android:id="@+id/loginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/register"
+            android:text="@string/login"
             android:textSize="48sp"
             android:textStyle="bold"
             android:layout_gravity="center"
@@ -39,50 +39,10 @@
             android:shadowDx="8"
             android:shadowDy="4"
             android:shadowRadius="1.6"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="32dp">
 
-            <EditText
-                android:id="@+id/firstNameRegister"
-                android:textStyle="bold"
-                android:textColorHint="@color/white"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:hint="@string/first_name"
-                android:inputType="textPersonName"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/white"
-                android:background="@drawable/text_fields"
-                android:minHeight="48dp"/>
-            <Space
-                android:layout_width="36dp"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/lastNameRegister"
-                android:textColorHint="@color/white"
-                android:textStyle="bold"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:hint="@string/last_name"
-                android:inputType="textPersonName"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/white"
-                android:background="@drawable/text_fields"
-                android:minHeight="48dp"/>
-        </LinearLayout>
 
         <EditText
-            android:id="@+id/emailRegister"
+            android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints=""
@@ -95,11 +55,11 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="64dp"
             android:background="@drawable/text_fields" />
 
         <EditText
-            android:id="@+id/passwordRegister"
+            android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -115,47 +75,40 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/text_fields" />
 
-        <EditText
-            android:id="@+id/confirmPasswordRegister"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:hint="@string/confirm_password"
-            android:layout_marginBottom="12dp"
-            android:inputType="textPassword"
-            android:minHeight="48dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
-            android:textColor="@color/white"
-            android:background="@drawable/text_fields" />
+            android:text="@string/forgot_password"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:minHeight="16dp" />
 
         <Button
-            android:id="@+id/signUpButtonRegister"
+            android:id="@+id/loginButton"
             android:backgroundTint="@color/blue"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="16dp"
             android:minHeight="48dp"
             android:shadowColor="#000000"
             android:shadowDx="8"
             android:shadowDy="2"
             android:shadowRadius="1.6"
-            android:text="@string/sign_up"
+            android:text="@string/login"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:layout_gravity="center"/>
 
         <TextView
-            android:id="@+id/alreadyHaveAccount"
+            android:id="@+id/dontHaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/have_an_account"
+            android:text="@string/not_have_an_account"
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:minHeight="48dp" />
+            android:minHeight="16dp" />
     </LinearLayout>
 </ScrollView>
