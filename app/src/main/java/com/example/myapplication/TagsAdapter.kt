@@ -23,7 +23,7 @@ class TagsAdapter(private val tagsList: List<String>) : RecyclerView.Adapter<Tag
         val tag = tagsList[position]
         holder.tagText.text = tag
         holder.itemView.setOnClickListener {
-            onItemClickListener?.invoke(tag) // קריאה ל-listener בעת לחיצה על תגית
+            onItemClickListener?.invoke(tag)
         }
     }
 

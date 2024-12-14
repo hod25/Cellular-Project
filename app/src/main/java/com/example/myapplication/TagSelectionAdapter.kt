@@ -8,7 +8,7 @@
 
     class TagSelectionAdapter(private val context: ShowHideDropdown) : RecyclerView.Adapter<TagSelectionAdapter.TagViewHolder>() {
 
-        private val tags = listOf("Tag 1", "Tag 2", "Tag 3", "Tag 4")  // רשימת תגיות
+        private val tags = listOf("Tag 1", "Tag 2", "Tag 3", "Tag 4")
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
             val view = LayoutInflater.from(parent.context)
@@ -29,8 +29,7 @@
             fun bind(tag: String) {
                 (itemView as TextView).text = tag
                 itemView.setOnClickListener {
-                    // פעולה כאשר לוחצים על תגית
-                    context.hideTagSelection() // קריאה לפונקציה שמסתירה את הרשימה
+                    context.hideTagSelection()
                 }
             }
         }

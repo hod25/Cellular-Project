@@ -18,34 +18,33 @@ class ShowHideDropdown: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edituser)
 
-        // אתחול המערכים
+        // init
         tagSelectionContainer = findViewById(R.id.tagSelectionContainer)
         addTagButton = findViewById(R.id.addTagButton)
         tagSelectionRecyclerView = findViewById(R.id.tagSelectionRecyclerView)
 
-        // הגדרת כפתור הוספת תגיות להציג את הרשימה
+        // add listener
         addTagButton.setOnClickListener {
             toggleTagSelection()
         }
 
-        // אתחול RecyclerView עם מחוון מתאים
+        // create adapter
         setupTagSelectionRecyclerView()
     }
 
     fun toggleTagSelection() {
-        // אם הרשימה מוצגת, נסיר אותה
+        // if the list is shon we hide it
         if (tagSelectionContainer.visibility == View.VISIBLE) {
             tagSelectionContainer.visibility = View.GONE
         } else {
-            // אחרת, נציג אותה
+            // else we show it
             tagSelectionContainer.visibility = View.VISIBLE
         }
     }
 
     private fun setupTagSelectionRecyclerView() {
-        // יצירת אדפטר והגדרת ראה-בוקר (במקרה של משתנה מדגם פשוט)
         tagSelectionRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = TagSelectionAdapter(this)  // אדפטר עם נתונים לדוגמה
+        val adapter = TagSelectionAdapter(this)
         tagSelectionRecyclerView.adapter = adapter
     }
 
