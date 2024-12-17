@@ -23,10 +23,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
-        // Navigate to Register Screen
+        // Navigate to Edit User Screen
         val editUserButton: Button = findViewById(R.id.editUserButton)
         editUserButton.setOnClickListener {
             val intent = Intent(this, EditUserActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Navigate to Create Recipe Screen
+        val createRecipe: Button = findViewById(R.id.createRecipe)
+        createRecipe.setOnClickListener {
+            val intent = Intent(this, CreateRecipeActivity::class.java)
             startActivity(intent)
         }
     }

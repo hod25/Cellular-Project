@@ -42,6 +42,13 @@
                 <action android:name="com.example.myapplication.EDITUSER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateRecipeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.myapplication.CREATERECIPE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

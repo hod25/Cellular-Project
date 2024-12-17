@@ -20,4 +20,6 @@
     <string name="tags">Tags:</string>
     <string name="email_colon">Email:</string>
     <string name="background">Background:</string>
+    <string name="delicious_pesto_spaghetti_no_cheese">Delicious pesto spaghetti - no cheese!</string>
+    <string name="create_recipe">Create Recipe</string>
 </resources>

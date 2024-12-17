@@ -39,4 +39,11 @@
         android:text="@string/edit_user"
         android:backgroundTint="@color/orange" />
 
+    <Button
+        android:id="@+id/createRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/create_recipe"
+        android:backgroundTint="@color/orange" />
+
 </LinearLayout>
