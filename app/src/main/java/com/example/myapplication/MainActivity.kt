@@ -1,40 +1,32 @@
 package com.example.myapplication
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class MainFragment : Fragment(R.layout.fragment_main) {
 
-        // Navigate to Login Screen
-        val loginButton: Button = findViewById(R.id.loginButton)
-        loginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val navController = findNavController()
+
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener {
+            navController.navigate(R.id.action_mainFragment_to_loginFragment)
         }
 
-        // Navigate to Register Screen
-        val registerButton: Button = findViewById(R.id.registerButton)
-        registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-        // Navigate to Edit User Screen
-        val editUserButton: Button = findViewById(R.id.editUserButton)
-        editUserButton.setOnClickListener {
-            val intent = Intent(this, EditUserActivity::class.java)
-            startActivity(intent)
+        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
+            navController.navigate(R.id.action_mainFragment_to_registerFragment)
         }
 
-        // Navigate to Create Recipe Screen
-        val createRecipe: Button = findViewById(R.id.createRecipe)
-        createRecipe.setOnClickListener {
-            val intent = Intent(this, CreateRecipeActivity::class.java)
-            startActivity(intent)
+        view.findViewById<Button>(R.id.editUserButton).setOnClickListener {
+            navController.navigate(R.id.action_mainFragment_to_editUserFragment)
+        }
+
+        view.findViewById<Button>(R.id.createRecipeButton).setOnClickListener {
+            navController.navigate(R.id.action_mainFragment_to_createRecipeFragment)
         }
     }
 }

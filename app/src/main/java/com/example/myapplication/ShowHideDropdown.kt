@@ -16,7 +16,7 @@ class ShowHideDropdown: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edituser)
+        setContentView(R.layout.fragment_edituser)
 
         // init
         tagSelectionContainer = findViewById(R.id.tagSelectionContainer)
