@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.myapplication.MainFragment"
-        android:label="MainFragment" >
+        android:name="com.example.myapplication.LoginFragment"
+        android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -21,18 +20,22 @@
             android:id="@+id/action_mainFragment_to_createRecipeFragment"
             app:destination="@id/createRecipeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.myapplication.LoginFragment"
         android:label="LoginFragment" />
+
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.myapplication.RegisterFragment"
         android:label="RegisterFragment" />
+
     <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.myapplication.CreateRecipeFragment"
         android:label="CreateRecipeFragment" />
+
     <fragment
         android:id="@+id/editUserFragment"
         android:name="com.example.myapplication.EditUserFragment"
