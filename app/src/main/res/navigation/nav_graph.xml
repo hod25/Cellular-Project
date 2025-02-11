@@ -1,0 +1,43 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.myapplication.LoginFragment"
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_mainFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_editUserFragment"
+            app:destination="@id/editUserFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_createRecipeFragment"
+            app:destination="@id/createRecipeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.myapplication.LoginFragment"
+        android:label="LoginFragment" />
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.myapplication.RegisterFragment"
+        android:label="RegisterFragment" />
+
+    <fragment
+        android:id="@+id/createRecipeFragment"
+        android:name="com.example.myapplication.CreateRecipeFragment"
+        android:label="CreateRecipeFragment" />
+
+    <fragment
+        android:id="@+id/editUserFragment"
+        android:name="com.example.myapplication.EditUserFragment"
+        android:label="EditUserFragment" />
+</navigation>

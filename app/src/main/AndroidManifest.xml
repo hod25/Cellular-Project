@@ -21,34 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.myapplication.REGISTER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.myapplication.LOGIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".EditUserActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.myapplication.EDITUSER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".CreateRecipeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.myapplication.CREATERECIPE" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
