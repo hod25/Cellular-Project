@@ -1,32 +1,22 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.NavController
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainActivity : AppCompatActivity() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private lateinit var navController: NavController
 
-        val navController = findNavController()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        view.findViewById<Button>(R.id.loginButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_loginFragment)
-        }
-
-        view.findViewById<Button>(R.id.registerButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_registerFragment)
-        }
-
-        view.findViewById<Button>(R.id.editUserButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_editUserFragment)
-        }
-
-        view.findViewById<Button>(R.id.createRecipeButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_createRecipeFragment)
-        }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
     }
 }
+
