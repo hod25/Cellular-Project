@@ -16,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.app.Activity
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import androidx.activity.result.ActivityResult
 
 class EditUserFragment : Fragment() {
     private lateinit var selectedTagsContainer: GridLayout
@@ -53,16 +57,16 @@ class EditUserFragment : Fragment() {
             toggleTagSelection()
         }
 
-//        imagePreview = view.findViewById(R.id.imagePreview)
-//        selectImageLauncher = registerForActivityResult(
-//            ActivityResultContracts.StartActivityForResult()
-//        ) { result ->
-//            if (result.resultCode == requireActivity().RESULT_OK) {
-//                val data: Intent? = result.data
-//                val imageUri: Uri? = data?.data
-//                imageUri?.let { imagePreview.setImageURI(it) }
-//            }
-//        }
+        imagePreview = view.findViewById(R.id.imagePreview)
+        selectImageLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val imageUri: Uri? = data?.data
+                imageUri?.let { imagePreview.setImageURI(it) }
+            }
+        }
 
         imagePreview.setOnClickListener {
             openImagePicker()
