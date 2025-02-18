@@ -131,20 +131,20 @@
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
+
             <Button
-                android:backgroundTint="@color/gold"
                 android:id="@+id/addTagButton"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:paddingBottom="0dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/light_gray"
                 android:paddingHorizontal="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
                 android:text="@string/plus"
                 android:textSize="24sp"
-                android:layout_width="48dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/tagsRecyclerView"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tagsRecyclerView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -160,10 +160,11 @@
 
         <Button
             android:id="@+id/saveUserChanges"
-            android:backgroundTint="@color/blue"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/gray"
             android:minHeight="48dp"
             android:shadowColor="#000000"
             android:shadowDx="8"
@@ -171,7 +172,6 @@
             android:shadowRadius="1.6"
             android:text="@string/save"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:layout_gravity="center"/>
+            android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>

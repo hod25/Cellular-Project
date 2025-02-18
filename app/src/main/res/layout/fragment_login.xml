@@ -27,17 +27,17 @@
             android:id="@+id/loginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:textSize="48sp"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
             android:minHeight="48dp"
-            android:textColor="@color/blue"
             android:shadowColor="#000000"
             android:shadowDx="8"
             android:shadowDy="4"
-            android:shadowRadius="1.6"/>
+            android:shadowRadius="1.6"
+            android:text="@string/login"
+            android:textColor="@color/title"
+            android:textSize="48sp"
+            android:textStyle="bold" />
 
 
         <EditText
@@ -86,10 +86,11 @@
 
         <Button
             android:id="@+id/loginButton"
-            android:backgroundTint="@color/blue"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/gray"
             android:minHeight="48dp"
             android:shadowColor="#000000"
             android:shadowDx="8"
@@ -97,8 +98,7 @@
             android:shadowRadius="1.6"
             android:text="@string/login"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:layout_gravity="center"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/dontHaveAccount"

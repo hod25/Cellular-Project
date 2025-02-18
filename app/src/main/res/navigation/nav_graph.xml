@@ -35,7 +35,11 @@
     <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.myapplication.CreateRecipeFragment"
-        android:label="CreateRecipeFragment" />
+        android:label="CreateRecipeFragment" >
+        <action
+            android:id="@+id/action_createRecipeFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/editUserFragment"
