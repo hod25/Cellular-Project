@@ -36,6 +36,7 @@
         android:layout_height="127dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
+        android:editable="true"
         android:shadowColor="@color/black"
         android:shadowDx="4"
         android:shadowDy="3"
@@ -69,5 +70,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.myapplication.TagFragment"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientList" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

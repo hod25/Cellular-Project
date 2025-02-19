@@ -13,7 +13,7 @@
         android:shadowDx="4"
         android:shadowDy="4"
         android:shadowRadius="2"
-        android:text="Button"
+        android:text="@string/button"
         tools:layout_editor_absoluteX="17dp"
         tools:layout_editor_absoluteY="11dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

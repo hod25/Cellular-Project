@@ -24,4 +24,5 @@
     <string name="create_recipe">Create Recipe</string>
     <string name="food">food</string>
     <string name="bin">bin</string>
+    <string name="button">Button</string>
 </resources>

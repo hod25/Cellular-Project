@@ -15,13 +15,13 @@
             android:id="@+id/appTitleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dish_for"
-            android:textSize="64sp"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
+            android:minHeight="48dp"
+            android:text="@string/dish_for"
             android:textColor="@color/title"
-            android:minHeight="48dp"/>
+            android:textSize="64sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/loginTitle"
@@ -35,7 +35,7 @@
             android:shadowDy="4"
             android:shadowRadius="1.6"
             android:text="@string/login"
-            android:textColor="@color/title"
+            android:textColor="@color/green"
             android:textSize="48sp"
             android:textStyle="bold" />
 
