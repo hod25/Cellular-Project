@@ -11,6 +11,7 @@
         android:id="@+id/itemCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checked="true"
         android:padding="8dp" />
 
     <TextView
