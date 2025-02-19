@@ -15,4 +15,8 @@ class RecipeViewModel : ViewModel() {
     fun removeIngredient(ingredient: String) {
         _ingredients.value = _ingredients.value?.toMutableList()?.apply { remove(ingredient) }
     }
+
+    fun removeAll() {
+        _ingredients.value = emptyList()
+    }
 }

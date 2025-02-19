@@ -2,9 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="36dp"
+    android:background="@color/background"
     android:paddingHorizontal="32dp"
-    android:background="@color/white">
+    android:paddingTop="36dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +15,13 @@
             android:id="@+id/appTitleRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dish_for"
-            android:textSize="64sp"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
+            android:minHeight="48dp"
+            android:text="@string/dish_for"
             android:textColor="@color/title"
-            android:minHeight="48dp"/>
+            android:textSize="64sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/registerTitle"
@@ -38,98 +38,101 @@
             android:textColor="@color/green"
             android:textSize="48sp"
             android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="12dp"
-            android:layout_marginTop="32dp">
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/firstNameRegister"
-                android:textStyle="bold"
-                android:textColorHint="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autofillHints=""
+                android:background="@drawable/text_fields"
                 android:hint="@string/first_name"
                 android:inputType="textPersonName"
+                android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/white"
-                android:background="@drawable/text_fields"
-                android:minHeight="48dp"/>
+                android:textColorHint="@color/white"
+                android:textStyle="bold" />
+
             <Space
                 android:layout_width="36dp"
                 android:layout_height="wrap_content" />
+
             <EditText
                 android:id="@+id/lastNameRegister"
-                android:textColorHint="@color/white"
-                android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autofillHints=""
+                android:background="@drawable/text_fields"
                 android:hint="@string/last_name"
                 android:inputType="textPersonName"
+                android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/white"
-                android:background="@drawable/text_fields"
-                android:minHeight="48dp"/>
+                android:textColorHint="@color/white"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/emailRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:hint="@string/email_address"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
+            android:autofillHints=""
+            android:background="@drawable/text_fields"
+            android:hint="@string/email_address"
             android:inputType="textEmailAddress"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
             android:minHeight="48dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/text_fields" />
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/passwordRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
-            android:autofillHints=""
-            android:hint="@string/password"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
+            android:autofillHints=""
+            android:background="@drawable/text_fields"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/text_fields" />
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/confirmPasswordRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:hint="@string/confirm_password"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
+            android:autofillHints=""
+            android:background="@drawable/text_fields"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
             android:textColor="@color/white"
-            android:background="@drawable/text_fields" />
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/signUpButtonRegister"
@@ -151,10 +154,10 @@
             android:id="@+id/alreadyHaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/have_an_account"
-            android:textColor="@color/black"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:text="@string/have_an_account"
+            android:textColor="@color/black" />
     </LinearLayout>
 </ScrollView>

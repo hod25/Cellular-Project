@@ -15,4 +15,5 @@
     <color name="red">#DC0000</color>
     <color name="yellow">#CDDC39</color>
     <color name="dark_green">#176A1C</color>
+    <color name="background">#384CAF50</color>
 </resources>
