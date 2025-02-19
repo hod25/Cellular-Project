@@ -66,11 +66,19 @@ class TagFragment : Fragment() {
 
             val params = GridLayout.LayoutParams()
             params.width = 220
-            params.height = 128
+            params.height = 108
             params.setMargins(8, 8, 8, 8)
             params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED,1)
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1)
             button.layoutParams = params
+
+            button.setOnClickListener {
+                val index = selectedTags.indexOf(tag)
+                if (index != -1) {
+                    selectedTags.removeAt(index)
+                    updateTagsInGrid()
+                }
+            }
 
             selectedTagsGridLayout.addView(button)
         }
