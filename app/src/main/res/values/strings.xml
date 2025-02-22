@@ -26,4 +26,6 @@
     <string name="bin">bin</string>
     <string name="button">Button</string>
     <string name="recipe_title">Recipe Title</string>
+    <string name="feed">Feed</string>
+    <string name="search_something">search something</string>
 </resources>

@@ -10,30 +10,18 @@ import android.widget.Button
 import android.widget.GridLayout
 import androidx.fragment.app.Fragment
 
-class TagFragment : Fragment() {
-
+class StaticTagsFragment : Fragment(){
     private lateinit var selectedTagsGridLayout: GridLayout
-    private lateinit var addTagButton: Button
-    private val selectedTags = mutableListOf<String>()
-
-    private val defaultTags = listOf(
-        "milk", "gluten", "meat"
-    )
+    private val selectedTags = listOf("milk", "gluten", "meat")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tagslist, container, false)
+        val view = inflater.inflate(R.layout.fragment_statictags, container, false)
 
         selectedTagsGridLayout = view.findViewById(R.id.tagContainer)
-        addTagButton = view.findViewById(R.id.addTagButton)
-
         updateTagsInGrid()
-
-        addTagButton.setOnClickListener {
-            showTagSelectionDialog()
-        }
 
         return view
     }
@@ -64,35 +52,8 @@ class TagFragment : Fragment() {
             params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED,1)
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1)
             button.layoutParams = params
-            button.setOnClickListener {
-                val index = selectedTags.indexOf(tag)
-                if (index != -1) {
-                    selectedTags.removeAt(index)
-                    updateTagsInGrid()
-                }
-            }
 
             selectedTagsGridLayout.addView(button)
         }
-    }
-
-    private fun showTagSelectionDialog() {
-        val tagOptions = defaultTags.toTypedArray()
-        val selectedItems = BooleanArray(tagOptions.size)
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("Choose Tag")
-            .setMultiChoiceItems(tagOptions, selectedItems) { _, which, isChecked ->
-                if (isChecked) {
-                    selectedTags.add(tagOptions[which])
-                } else {
-                    selectedTags.remove(tagOptions[which])
-                }
-            }
-            .setPositiveButton("Confirm") { _, _ ->
-                updateTagsInGrid()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 }

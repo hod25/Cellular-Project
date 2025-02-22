@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_mainFragment_to_createRecipeFragment"
             app:destination="@id/createRecipeFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 
     <fragment
@@ -45,4 +48,8 @@
         android:id="@+id/editUserFragment"
         android:name="com.example.myapplication.EditUserFragment"
         android:label="EditUserFragment" />
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.myapplication.FeedFragment"
+        android:label="FeedFragment" />
 </navigation>
