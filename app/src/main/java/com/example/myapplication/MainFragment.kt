@@ -1,32 +1,42 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import android.widget.Button
 
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment: Fragment(R.layout.fragment_main) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_main, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val navController = findNavController()
-
         view.findViewById<Button>(R.id.loginButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
         }
 
         view.findViewById<Button>(R.id.registerButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_registerFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_registerFragment)
         }
 
         view.findViewById<Button>(R.id.editUserButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_editUserFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_editUserFragment)
         }
 
         view.findViewById<Button>(R.id.createRecipeButton).setOnClickListener {
-            navController.navigate(R.id.action_mainFragment_to_createRecipeFragment)
+            findNavController().navigate(R.id.action_mainFragment_to_createRecipeFragment)
+        }
+
+        view.findViewById<Button>(R.id.FeedButton).setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_feedFragment)
         }
     }
 }

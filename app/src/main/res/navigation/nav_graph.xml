@@ -1,5 +1,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment">
 
@@ -19,6 +20,9 @@
         <action
             android:id="@+id/action_mainFragment_to_createRecipeFragment"
             app:destination="@id/createRecipeFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 
     <fragment
@@ -34,10 +38,18 @@
     <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.myapplication.CreateRecipeFragment"
-        android:label="CreateRecipeFragment" />
+        android:label="CreateRecipeFragment" >
+        <action
+            android:id="@+id/action_createRecipeFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/editUserFragment"
         android:name="com.example.myapplication.EditUserFragment"
         android:label="EditUserFragment" />
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.myapplication.FeedFragment"
+        android:label="FeedFragment" />
 </navigation>

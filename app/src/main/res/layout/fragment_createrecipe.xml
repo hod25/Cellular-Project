@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <TextView
         android:id="@+id/appTitleEditUser2"
@@ -21,40 +22,85 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imagePreview"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2"
         app:srcCompat="@drawable/pesto" />
 
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/recipeName"
         android:layout_width="200dp"
         android:layout_height="127dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
+        android:background="@android:color/transparent"
+        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:shadowColor="@color/black"
         android:shadowDx="4"
         android:shadowDy="3"
         android:shadowRadius="1"
-        android:text="@string/delicious_pesto_spaghetti_no_cheese"
+        android:text="@string/recipe_title"
         android:textColor="@color/green"
         android:textSize="28sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/imagePreview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2" />
 
-    <ListView
-        android:id="@+id/ingredient"
-        android:layout_width="341dp"
-        android:layout_height="199dp"
-        android:layout_marginStart="16dp"
+
+    <ImageView
+        android:id="@+id/deleteRecipe"
+        android:layout_width="34dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2"
+        app:srcCompat="@drawable/bin" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/ingredientList"
+        android:name="com.example.myapplication.IngredientListFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/recipeName" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.myapplication.TagFragment"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientList" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/green"
+        android:shadowColor="#000000"
+        android:shadowDx="6"
+        android:shadowDy="3"
+        android:shadowRadius="16"
+        android:text="Save"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

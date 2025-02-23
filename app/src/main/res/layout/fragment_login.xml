@@ -2,9 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="36dp"
+    android:background="@color/background"
     android:paddingHorizontal="32dp"
-    android:background="@color/white">
+    android:paddingTop="36dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,81 +15,82 @@
             android:id="@+id/appTitleLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dish_for"
-            android:textSize="64sp"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
+            android:minHeight="48dp"
+            android:text="@string/dish_for"
             android:textColor="@color/title"
-            android:minHeight="48dp"/>
+            android:textSize="64sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/loginTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:textSize="48sp"
-            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
             android:minHeight="48dp"
-            android:textColor="@color/blue"
             android:shadowColor="#000000"
             android:shadowDx="8"
             android:shadowDy="4"
-            android:shadowRadius="1.6"/>
+            android:shadowRadius="1.6"
+            android:text="@string/login"
+            android:textColor="@color/green"
+            android:textSize="48sp"
+            android:textStyle="bold" />
 
 
         <EditText
             android:id="@+id/emailLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints=""
-            android:hint="@string/email_address"
+            android:layout_marginTop="64dp"
             android:layout_marginBottom="12dp"
+            android:autofillHints=""
+            android:background="@drawable/text_fields"
+            android:hint="@string/email_address"
             android:inputType="textEmailAddress"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
             android:minHeight="48dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:layout_marginTop="64dp"
-            android:background="@drawable/text_fields" />
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/passwordLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColorHint="@color/white"
-            android:autofillHints=""
-            android:hint="@string/password"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="12dp"
+            android:autofillHints=""
+            android:background="@drawable/text_fields"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:minHeight="48dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/text_fields" />
+            android:textColorHint="@color/white"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/forgot_password"
-            android:textColor="@color/black"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:minHeight="16dp" />
+            android:minHeight="16dp"
+            android:text="@string/forgot_password"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/loginButton"
-            android:backgroundTint="@color/blue"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/gray"
             android:minHeight="48dp"
             android:shadowColor="#000000"
             android:shadowDx="8"
@@ -97,17 +98,16 @@
             android:shadowRadius="1.6"
             android:text="@string/login"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:layout_gravity="center"/>
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/dontHaveAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/not_have_an_account"
-            android:textColor="@color/black"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:minHeight="16dp" />
+            android:minHeight="16dp"
+            android:text="@string/not_have_an_account"
+            android:textColor="@color/black" />
     </LinearLayout>
 </ScrollView>
