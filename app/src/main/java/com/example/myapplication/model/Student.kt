@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
-import com.idz.colman24class1.base.MyApplication
+import com.idz.myapplication.base.MyApplication
 
 /*
 1. Update json and add updated timestamp

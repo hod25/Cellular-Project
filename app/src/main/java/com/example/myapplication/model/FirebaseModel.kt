@@ -1,4 +1,4 @@
-package com.idz.myapplication.model
+package com.example.myapplication.model
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -7,10 +7,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.idz.myapplication.model.base.Constants
-import com.idz.myapplication.model.base.EmptyCallback
-import com.idz.myapplication.model.base.StudentsCallback
-import com.idz.myapplication.model.utils.extensions.toFirebaseTimestamp
+import com.idz.myapplication.model.Student
+import com.idz.myapplication.base.Constants
+import com.idz.myapplication.base.EmptyCallback
+import com.idz.myapplication.base.StudentsCallback
+import com.idz.myapplication.utils.extensions.toFirebaseTimestamp
 import java.io.ByteArrayOutputStream
 
 class FirebaseModel {
