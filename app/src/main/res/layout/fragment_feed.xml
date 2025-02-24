@@ -41,7 +41,7 @@
         android:name="com.example.myapplication.RecipePreviewFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,9 +54,9 @@
         android:name="com.example.myapplication.TagFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:maxWidth="300dp"
         android:paddingLeft="72dp"
         android:paddingRight="48dp"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/searchLine" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/searchButton"
         android:layout_width="36dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"

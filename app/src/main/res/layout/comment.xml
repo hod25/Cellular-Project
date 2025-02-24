@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/commentOwnerImg"
         android:layout_width="64dp"
-        android:layout_height="40dp"
+        android:layout_height="22dp"
         android:layout_weight="1"
         android:contentDescription="@string/bin"
         app:srcCompat="@drawable/avatar" />
@@ -23,6 +23,6 @@
         android:padding="8dp"
         android:text="Amazing"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="18sp" />
 
 </LinearLayout>
