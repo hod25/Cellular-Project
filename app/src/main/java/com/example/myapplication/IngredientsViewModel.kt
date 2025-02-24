@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class RecipeViewModel : ViewModel() {
+class IngredientsViewModel : ViewModel() {
     private val _ingredients = MutableLiveData<List<String>>(emptyList())
     val ingredients: LiveData<List<String>> = _ingredients
 
@@ -16,7 +16,7 @@ class RecipeViewModel : ViewModel() {
         _ingredients.value = _ingredients.value?.toMutableList()?.apply { remove(ingredient) }
     }
 
-    fun removeAll() {
+    fun removeAllIngredients() {
         _ingredients.value = emptyList()
     }
 }

@@ -1,81 +1,53 @@
 package com.example.myapplication.model
 
-import android.graphics.Bitmap
-import android.util.Log
-import com.google.firebase.firestore.firestoreSettings
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.memoryCacheSettings
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import com.idz.myapplication.model.Student
-import com.idz.myapplication.base.Constants
-import com.idz.myapplication.base.EmptyCallback
-import com.idz.myapplication.base.StudentsCallback
-import com.idz.myapplication.utils.extensions.toFirebaseTimestamp
-import java.io.ByteArrayOutputStream
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.myapplication.model.Recipe
+import com.example.myapplication.repository.RecipeRepository
+import kotlinx.coroutines.launch
 
-class FirebaseModel {
+class RecipeViewModel : ViewModel() {
 
-    private val database = Firebase.firestore
-    private val storage = Firebase.storage
+    private val repository = RecipeRepository()
 
-    init {
+    private val _recipes = MutableLiveData<List<Recipe>>() // רשימת מתכונים
+    val recipes: LiveData<List<Recipe>> = _recipes
 
-        val settings = firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings {  })
+    private val _isLoading = MutableLiveData<Boolean>() // טעינה
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    // 1️⃣ שליפת מתכונים מה-Repository
+    fun fetchRecipes() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _recipes.value = repository.getAllRecipes()
+            _isLoading.value = false
         }
-        database.firestoreSettings = settings
     }
 
-    fun getAllStudents(sinceLastUpdated: Long, callback: StudentsCallback) {
-
-        database.collection(Constants.Collections.STUDENTS)
-            .whereGreaterThanOrEqualTo(Student.LAST_UPDATED, sinceLastUpdated.toFirebaseTimestamp)
-            .get()
-            .addOnCompleteListener {
-                when (it.isSuccessful) {
-                    true -> {
-                        val students: MutableList<Student> = mutableListOf()
-                        for (json in it.result) {
-                            students.add(Student.fromJSON(json.data))
-                        }
-                        Log.d("TAG", students.size.toString())
-                        callback(students)
-                    }
-
-                    false -> callback(listOf())
-                }
-            }
+    // 2️⃣ הוספת מתכון
+    fun addRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            val success = repository.addRecipe(recipe)
+            if (success) fetchRecipes() // ריענון הנתונים אחרי הוספה
+        }
     }
 
-    fun add(student: Student, callback: EmptyCallback) {
-        database.collection(Constants.Collections.STUDENTS).document(student.id).set(student.json)
-            .addOnCompleteListener {
-                callback()
-            }
-            .addOnFailureListener {
-                Log.d("TAG", it.toString() + it.message)
-            }
+    // 3️⃣ עדכון מתכון
+    fun updateRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            val success = repository.updateRecipe(recipe)
+            if (success) fetchRecipes()
+        }
     }
 
-    fun delete(student: Student, callback: EmptyCallback) {
-
-    }
-
-    fun uploadImage(image: Bitmap, name: String, callback: (String?) -> Unit) {
-        val storageRef = storage.reference
-        val imageRef = storageRef.child("images/$name.jpg")
-        val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        var uploadTask = imageRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            callback(null)
-        }.addOnSuccessListener { taskSnapshot ->
-            imageRef.downloadUrl.addOnSuccessListener { uri ->
-                callback(uri.toString())
-            }
+    // 4️⃣ מחיקת מתכון
+    fun deleteRecipe(recipeId: String) {
+        viewModelScope.launch {
+            val success = repository.deleteRecipe(recipeId)
+            if (success) fetchRecipes()
         }
     }
 }

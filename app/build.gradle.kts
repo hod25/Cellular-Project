@@ -1,8 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android) version "1.9.0"
+    alias(libs.plugins.androidx.navigation.safeargs)
     id("kotlin-kapt")
-//    alias(libs.plugins.google.services)
+    id("com.google.gms.google-services")
+    //id("org.jetbrains.kotlin.android") version "1.9.0"
 }
 
 android {
@@ -52,6 +54,9 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
     implementation (libs.cloudinary.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -76,7 +81,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(libs.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    //kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.navigation.fragment.ktx)

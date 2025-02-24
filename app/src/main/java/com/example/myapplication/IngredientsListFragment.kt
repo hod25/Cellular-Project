@@ -14,10 +14,11 @@
     import android.widget.TextView
     import androidx.fragment.app.Fragment
     import androidx.fragment.app.activityViewModels
+    import androidx.fragment.app.viewModels
 
     class IngredientListFragment : Fragment(R.layout.fragment_ingredientlist) {
 
-        private val sharedViewModel: RecipeViewModel by activityViewModels()
+        private val sharedViewModel: IngredientsViewModel by viewModels()
         private lateinit var adapter: IngredientAdapter
         private val items = mutableListOf<String>()
 
@@ -67,7 +68,7 @@
     class IngredientAdapter(
         context: Context,
         private val ingredients: MutableList<String>,
-        private val sharedViewModel: RecipeViewModel
+        private val sharedViewModel: IngredientsViewModel
     ) : ArrayAdapter<String>(context, R.layout.ingredient, ingredients) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

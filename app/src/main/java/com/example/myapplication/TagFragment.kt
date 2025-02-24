@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.example.myapplication.utils.extensions.TagsViewModel
 
 class TagFragment : Fragment() {
 
     private lateinit var selectedTagsGridLayout: GridLayout
     private lateinit var addTagButton: Button
     private val selectedTags = mutableListOf<String>()
+    private val tagsViewModel: TagsViewModel by viewModels()
 
     private val defaultTags = listOf(
         "milk", "gluten", "meat"
@@ -68,6 +71,7 @@ class TagFragment : Fragment() {
                 val index = selectedTags.indexOf(tag)
                 if (index != -1) {
                     selectedTags.removeAt(index)
+                    tagsViewModel.setTags(selectedTags)
                     updateTagsInGrid()
                 }
             }
