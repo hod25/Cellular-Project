@@ -80,11 +80,9 @@
             itemTextView.text = ingredient
 
             deleteIcon.setOnClickListener {
-                // מחיקת פריט מהרשימה
                 ingredients.removeAt(position)
-                notifyDataSetChanged()  // עדכון ה-Adapter כדי שהרשימה תתעדכן
+                notifyDataSetChanged()
 
-                // עדכון המודל (ViewModel) עם הרשימה המעודכנת
                 sharedViewModel.removeIngredient(ingredient)
             }
 

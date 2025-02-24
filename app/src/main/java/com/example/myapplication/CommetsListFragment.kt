@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.myapplication.utils.extensions.Comment
 
 class CommentsFragment : Fragment() {
     override fun onCreateView(
@@ -23,8 +24,14 @@ class CommentsFragment : Fragment() {
         val heartImageView: ImageView = view.findViewById(R.id.imageView)
         val likes: TextView = view.findViewById(R.id.likes)
 
-        val comments = listOf("תגובה 1", "תגובה 2", "תגובה 3", "תגובה 4")
-        val adapter = CommentsAdapter(requireContext(), comments)
+        val comments = listOf(
+            Comment("comment 1", R.drawable.avatar),
+            Comment("comment 2", R.drawable.avatar),
+            Comment("comment 3", R.drawable.avatar),
+            Comment("comment 4", R.drawable.avatar)
+        )
+
+       val adapter = CommentsAdapter(requireContext(), comments)
         commentsListView.adapter = adapter
 
         heartImageView.setOnClickListener {
