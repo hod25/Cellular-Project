@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView2"
+        android:id="@+id/recipes"
         android:name="com.example.myapplication.RecipePreviewFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
