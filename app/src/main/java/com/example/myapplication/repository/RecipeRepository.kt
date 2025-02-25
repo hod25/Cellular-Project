@@ -27,7 +27,8 @@ class RecipeRepository {
     // 2️⃣ הוספת מתכון חדש
     suspend fun addRecipe(recipe: Recipe): Boolean {
         return try {
-            database.collection(collectionName).document().set(recipe).await()
+            val docRef = database.collection("Recipes").add(recipe).await()
+            docRef.update("id", docRef.id) // 🔹 עדכון ה-ID במסמך
             true
         } catch (e: Exception) {
             Log.e("Firebase", "Error adding recipe", e)

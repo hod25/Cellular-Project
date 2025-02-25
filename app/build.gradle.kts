@@ -64,7 +64,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     
-    implementation(libs.firebase.firestore.ktx)
+    //implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.storage.ktx)
     
     implementation(libs.androidx.navigation.fragment)

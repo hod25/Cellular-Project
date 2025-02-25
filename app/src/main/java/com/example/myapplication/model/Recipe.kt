@@ -4,8 +4,8 @@ data class Recipe(
     val id: String = "",
     val title: String = "",
     val image: String = "",
-    val ingredients: Array<String> = arrayOf(),
-    val tags: Array<String> = arrayOf(),
+    val ingredients: List<String> = listOf(),
+    val tags: List<String> = listOf(),
     val owner: String = "",
     val likes: Int = 0
 )
