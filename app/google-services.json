@@ -1,1 +1,29 @@
-
+{
+  "project_info": {
+    "project_number": "897718372475",
+    "project_id": "dishfor-3f4f7",
+    "storage_bucket": "dishfor-3f4f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897718372475:android:0253f017742a7e4c1c3ade",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmOrJlldFTT4M0A4LD8-0OeCsaivvIxxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
