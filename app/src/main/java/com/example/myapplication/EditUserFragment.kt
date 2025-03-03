@@ -20,6 +20,7 @@ import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
 import androidx.activity.result.ActivityResult
+import com.example.myapplication.Adapter.TagsAdapter
 
 class EditUserFragment : Fragment() {
     private lateinit var selectedTagsContainer: GridLayout

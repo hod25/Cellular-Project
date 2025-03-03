@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.BaseAdapter
 import android.widget.ImageView
-import com.example.myapplication.utils.extensions.Comment
+import com.example.myapplication.R
+import com.example.myapplication.model.Comment
 
 class CommentsAdapter(private val context: Context, private val comments: List<Comment>) : BaseAdapter() {
     override fun getCount(): Int {

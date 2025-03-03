@@ -11,7 +11,6 @@ class RecipeRepository {
     private val database = Firebase.firestore
     private val collectionName = "Recipes"
 
-    // 1️⃣ שליפת כל המתכונים עם suspend (עובד עם קורוטינות)
     suspend fun getAllRecipes(): List<Recipe> {
         return try {
             val snapshot = database.collection(collectionName).get().await()
@@ -24,7 +23,6 @@ class RecipeRepository {
         }
     }
 
-    // 2️⃣ הוספת מתכון חדש
     suspend fun addRecipe(recipe: Recipe): Boolean {
         return try {
             val docRef = database.collection("Recipes").add(recipe).await()
@@ -36,7 +34,6 @@ class RecipeRepository {
         }
     }
 
-    // 3️⃣ עדכון מתכון קיים
     suspend fun updateRecipe(recipe: Recipe): Boolean {
         return try {
             database.collection(collectionName).document(recipe.id).set(recipe).await()
@@ -47,7 +44,6 @@ class RecipeRepository {
         }
     }
 
-    // 4️⃣ מחיקת מתכון
     suspend fun deleteRecipe(recipeId: String): Boolean {
         return try {
             database.collection(collectionName).document(recipeId).delete().await()

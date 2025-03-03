@@ -16,7 +16,7 @@
     import androidx.fragment.app.activityViewModels
     import androidx.fragment.app.viewModels
 
-    class IngredientListFragment : Fragment(R.layout.fragment_ingredientlist) {
+    class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
 
         private val sharedViewModel: IngredientsViewModel by activityViewModels()
         private lateinit var adapter: IngredientAdapter
