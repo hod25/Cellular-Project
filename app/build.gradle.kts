@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.androidx.navigation.safeargs)
     id("kotlin-kapt")
     id("com.google.gms.google-services")
-    //id("org.jetbrains.kotlin.android") version "1.9.0"
 }
 
 android {
@@ -63,10 +62,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    
-    //implementation(libs.firebase.firestore.ktx)
+
+    implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.storage.ktx)
-    
+
     implementation(libs.androidx.navigation.fragment)
 //    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
@@ -90,6 +89,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
 }
