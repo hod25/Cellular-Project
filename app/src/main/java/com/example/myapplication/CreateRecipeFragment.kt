@@ -1,5 +1,9 @@
 package com.example.myapplication
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -27,8 +31,8 @@ import com.example.myapplication.utils.extensions.TagsViewModel
 
 class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
 
-    private val ingredientsViewModel : IngredientsViewModel by viewModels()
-    private val tagsViewModel : TagsViewModel by viewModels()
+    private val ingredientsViewModel : IngredientsViewModel by activityViewModels()
+    private val tagsViewModel : TagsViewModel by activityViewModels()
     private val recipeViewModel: RecipeViewModel by viewModels()
     private lateinit var imagePreview: ImageView
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
@@ -63,6 +67,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         tagsViewModel.tags.observe(viewLifecycleOwner) { tags ->
             // You can access and use the tags here
             tagsList = tags
+            Log.d("TagsViewModel", "Updated tags: $tags")  // הדפסת התגיות
         }
 
         imagePreview = view.findViewById(R.id.imagePreview)
@@ -97,16 +102,17 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             //}
 
             val recipe = Recipe(
-                id = "", // Firebase יוצר ID אוטומטי
+                //id = "", // Firebase יוצר ID אוטומטי
                 title = title,
                 //image = imageUrl,
-                ingredients = ingredientsList.toTypedArray(),
-                tags = tagsList.toTypedArray(),
+                ingredients = ingredientsList,
+                tags = tagsList,
                 owner = "USER_ID", // כאן נכניס את ה-User ID מתוך FirebaseAuth
                 likes = 0
             )
 
-            recipeViewModel.addRecipe(recipe) // שליחה ל-Firebase דרך ה-ViewModel
+            recipeViewModel.addRecipe(recipe)
+            //checkFirestoreConnection()
             Toast.makeText(requireContext(), "Recipe saved successfully", Toast.LENGTH_SHORT).show()
         }
 
@@ -117,5 +123,22 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
         selectImageLauncher.launch(intent)
+    }
+
+
+
+    fun checkFirestoreConnection() {
+        val db = Firebase.firestore // חיבור ישיר ל-Firestore בגרסה החדשה
+
+        val testData = hashMapOf("message" to "Hello Firebase!", "timestamp" to System.currentTimeMillis())
+
+        db.collection("TestCollection")
+            .add(testData)
+            .addOnSuccessListener { documentReference ->
+                println("Firestore connected! Document ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                println("Firestore connection failed: ${e.message}")
+            }
     }
 }

@@ -18,7 +18,7 @@
 
     class IngredientListFragment : Fragment(R.layout.fragment_ingredientlist) {
 
-        private val sharedViewModel: IngredientsViewModel by viewModels()
+        private val sharedViewModel: IngredientsViewModel by activityViewModels()
         private lateinit var adapter: IngredientAdapter
         private val items = mutableListOf<String>()
 
