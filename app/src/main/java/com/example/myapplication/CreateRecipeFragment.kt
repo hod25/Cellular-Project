@@ -27,23 +27,31 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.RecipeViewModel
+import com.example.myapplication.model.UserViewModel
 import com.example.myapplication.utils.extensions.TagsViewModel
 
 class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
 
-    private val ingredientsViewModel : IngredientsViewModel by activityViewModels()
-    private val tagsViewModel : TagsViewModel by activityViewModels()
+    private val ingredientsViewModel: IngredientsViewModel by activityViewModels()
+    private val tagsViewModel: TagsViewModel by activityViewModels()
     private val recipeViewModel: RecipeViewModel by viewModels()
     private lateinit var imagePreview: ImageView
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
     private var ingredientsList: List<String> = listOf()
-    private var tagsList:List<String> = listOf()
+    private var tagsList: List<String> = listOf()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private var userId: String? = null  // שמירת UID של המשתמש המחובר
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_createrecipe, container, false)
+
+        // קבלת UID של המשתמש המחובר
+        userViewModel.userId.observe(viewLifecycleOwner) { uid ->
+            userId = uid
+        }
 
         val deleteIcon: ImageView = view.findViewById(R.id.deleteRecipe)
         deleteIcon.setOnClickListener {
@@ -59,15 +67,13 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 .show()
         }
 
-        // מאזינים לשינויים ברשימת המרכיבים ושומרים אותה במשתנה
         ingredientsViewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
             ingredientsList = ingredients
         }
 
         tagsViewModel.tags.observe(viewLifecycleOwner) { tags ->
-            // You can access and use the tags here
             tagsList = tags
-            Log.d("TagsViewModel", "Updated tags: $tags")  // הדפסת התגיות
+            Log.d("TagsViewModel", "Updated tags: $tags")
         }
 
         imagePreview = view.findViewById(R.id.imagePreview)
@@ -90,29 +96,21 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
 
         buttonSave.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
-            //val imageUrl = imagePreview..toString().trim()
 
             if (title.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in title", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            //if (ingredientsList.isEmpty()) {
-            //    Toast.makeText(requireContext(), "Please add at least one ingredient", Toast.LENGTH_SHORT).show()
-            //    return@setOnClickListener
-            //}
 
             val recipe = Recipe(
-                //id = "", // Firebase יוצר ID אוטומטי
                 title = title,
-                //image = imageUrl,
                 ingredients = ingredientsList,
                 tags = tagsList,
-                owner = "USER_ID", // כאן נכניס את ה-User ID מתוך FirebaseAuth
+                owner = userId ?: "Unknown", // אם אין UID נכניס "Unknown"
                 likes = 0
             )
 
             recipeViewModel.addRecipe(recipe)
-            //checkFirestoreConnection()
             Toast.makeText(requireContext(), "Recipe saved successfully", Toast.LENGTH_SHORT).show()
         }
 
@@ -123,22 +121,5 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
         selectImageLauncher.launch(intent)
-    }
-
-
-
-    fun checkFirestoreConnection() {
-        val db = Firebase.firestore // חיבור ישיר ל-Firestore בגרסה החדשה
-
-        val testData = hashMapOf("message" to "Hello Firebase!", "timestamp" to System.currentTimeMillis())
-
-        db.collection("TestCollection")
-            .add(testData)
-            .addOnSuccessListener { documentReference ->
-                println("Firestore connected! Document ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                println("Firestore connection failed: ${e.message}")
-            }
     }
 }

@@ -3,34 +3,30 @@ package com.example.myapplication.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.UserRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val userRepository = UserRepository() // יצירת אובייקט של ה-UserRepository
+    private val userRepository = UserRepository()
+
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
 
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    private var viewModelJob: Job? = null
+    private val _userId = MutableLiveData<String?>()
+    val userId: LiveData<String?> get() = _userId
 
     // פונקציה להתחברות
     fun loginUser(email: String, password: String) {
-        // אם יש כבר עבודה בקורוטינה, עצור אותה
-        viewModelJob?.cancel()
+        viewModelScope.launch {
+            val uid = userRepository.loginUser(email, password)
 
-        // יצירת קורוטינה חדשה
-        viewModelJob = CoroutineScope(Dispatchers.IO).launch {
-            val result = userRepository.loginUser(email, password)
-
-            // עדכון ב-UI אחרי שהקורוטינה מסתיימת
-            if (result) {
+            if (uid != null) {
+                _userId.postValue(uid) // שמירת ה-UID של המשתמש
                 _loginResult.postValue(true)
             } else {
                 _errorMessage.postValue("התחברות נכשלה")
@@ -39,9 +35,10 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    // הפסקת כל העבודה בקורוטינה במקרה של שינוי מצב
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob?.cancel()
+    // פונקציה להתנתקות
+    fun logoutUser() {
+        userRepository.auth.signOut()
+        _userId.postValue(null)
+        _loginResult.postValue(false)
     }
 }
