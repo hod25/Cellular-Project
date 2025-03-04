@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/gray"
+            android:backgroundTint="@color/green"
             android:minHeight="48dp"
             android:shadowColor="#000000"
             android:shadowDx="8"

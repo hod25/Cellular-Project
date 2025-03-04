@@ -60,4 +60,12 @@
         android:backgroundTint="@color/orange"
         android:text="@string/feed" />
 
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:backgroundTint="@color/red"
+        android:layout_marginTop="16dp"/>
+
 </LinearLayout>
