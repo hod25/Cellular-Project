@@ -34,6 +34,9 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         view.findViewById<Button>(R.id.createRecipeButton).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_createRecipeFragment)
         }
+        view.findViewById<Button>(R.id.editRecipeButton).setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_editRecipeFragment)
+        }
 
         view.findViewById<Button>(R.id.FeedButton).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_feedFragment)

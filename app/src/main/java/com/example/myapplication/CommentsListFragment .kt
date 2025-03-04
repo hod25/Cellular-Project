@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,8 @@ import androidx.fragment.app.Fragment
 import com.example.myapplication.Adapter.CommentsAdapter
 import com.example.myapplication.model.Comment
 
-class CommetsListFragment(val comments : List<Comment>) : Fragment() {
+class CommentsListFragment (val comments : List<Comment>) : Fragment() {
+    constructor() : this(emptyList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

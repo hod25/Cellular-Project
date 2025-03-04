@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import com.example.myapplication.CommetsListFragment
+import com.example.myapplication.CommentsListFragment
 import com.example.myapplication.R
 import com.example.myapplication.StaticTagsFragment
 import com.example.myapplication.model.Comment
@@ -56,7 +56,7 @@ class FeedAdapter(
         val commentsFragmentTransaction = fragmentManager.beginTransaction()
         val commentList = recipe.comments.map { Comment(recipe = "", content = it, imageResId = R.drawable.pesto) }
 
-        val commentsFragmentInstance = CommetsListFragment(commentList)
+        val commentsFragmentInstance = CommentsListFragment (commentList)
         commentsFragmentTransaction.replace(commentsFragmentContainer.id, commentsFragmentInstance)
         commentsFragmentTransaction.commit()
 

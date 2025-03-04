@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.model.User
 import com.example.myapplication.model.RegisterViewModel
 import kotlinx.coroutines.launch
@@ -23,6 +25,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val emailField = view.findViewById<EditText>(R.id.emailRegister)
         val passwordField = view.findViewById<EditText>(R.id.passwordRegister)
         val signUpButton = view.findViewById<Button>(R.id.signUpButtonRegister)
+        val alreadyHaveAccount = view.findViewById<TextView>(R.id.alreadyHaveAccount)
 
         signUpButton.setOnClickListener {
             val firstName = firstNameField.text.toString().trim()
@@ -41,11 +44,17 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         }
 
+        // ה-`OnClickListener` של כפתור "יש לך כבר חשבון"
+        alreadyHaveAccount.setOnClickListener {
+            // ניווט למסך ההתחברות
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+
         // מאזין לתוצאה של ההרשמה
         registerViewModel.registerResult.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "הרשמה הצליחה!", Toast.LENGTH_SHORT).show()
-                // אפשר להוסיף כאן מעבר למסך אחר
+                // אפשר להוסיף כאן מעבר למסך אחר אם ההרשמה הצליחה
             } else {
                 // אם ההרשמה נכשלה
                 val errorMessage = registerViewModel.errorMessage.value ?: "הרשמה נכשלה"

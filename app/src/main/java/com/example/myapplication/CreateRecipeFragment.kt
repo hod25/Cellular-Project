@@ -53,13 +53,14 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             userId = uid
         }
 
+        // כפתור מחיקת המתכון
         val deleteIcon: ImageView = view.findViewById(R.id.deleteRecipe)
         deleteIcon.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Are you sure you want to delete the recipe?")
                 .setPositiveButton("Yes") { _, _ ->
                     ingredientsViewModel.removeAllIngredients()
-                    findNavController().navigate(R.id.mainFragment)
+                    findNavController().navigate(R.id.mainFragment) // ניווט לדף הבית
                 }
                 .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()
@@ -67,15 +68,18 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 .show()
         }
 
+        // מאזין לשינויים ברשימת המרכיבים
         ingredientsViewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
             ingredientsList = ingredients
         }
 
+        // מאזין לשינויים ברשימת התגיות
         tagsViewModel.tags.observe(viewLifecycleOwner) { tags ->
             tagsList = tags
             Log.d("TagsViewModel", "Updated tags: $tags")
         }
 
+        // הגדרת התמונה
         imagePreview = view.findViewById(R.id.imagePreview)
         selectImageLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -87,6 +91,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             }
         }
 
+        // לחיצה על התמונה לבחור תמונה
         imagePreview.setOnClickListener {
             openImagePicker()
         }
@@ -94,14 +99,17 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         val editTextTitle = view.findViewById<EditText>(R.id.recipeName)
         val buttonSave = view.findViewById<Button>(R.id.save)
 
+        // לחיצה על שמירת המתכון
         buttonSave.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
 
+            // אם אין כותרת, נעדכן את המשתמש
             if (title.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in title", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // יצירת אובייקט המתכון
             val recipe = Recipe(
                 title = title,
                 ingredients = ingredientsList,
@@ -110,13 +118,18 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 likes = 0
             )
 
+            // שמירת המתכון
             recipeViewModel.addRecipe(recipe)
             Toast.makeText(requireContext(), "Recipe saved successfully", Toast.LENGTH_SHORT).show()
+
+            // ניווט לעמוד הפיד אחרי השמירה
+            findNavController().navigate(R.id.feedFragment)  // החלף ל-id של הפיד שלך
         }
 
         return view
     }
 
+    // פונקציה לפתיחת בחירת תמונה
     private fun openImagePicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
