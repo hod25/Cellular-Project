@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.model.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -41,11 +42,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             if (success) {
                 Toast.makeText(requireContext(), "התחברת בהצלחה!", Toast.LENGTH_SHORT).show()
                 // ניווט למסך אחר, למשל מסך הבית
+                findNavController().navigate(R.id.createRecipeFragment)
             } else {
                 // הצגת שגיאה במידה וההתחברות נכשלה
                 val errorMessage = loginViewModel.errorMessage.value ?: "התחברות נכשלה"
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
+        val dontHaveAccountText = view.findViewById<TextView>(R.id.dontHaveAccount)
+
+        dontHaveAccountText.setOnClickListener {
+            // ניווט למסך ההרשמה
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
         // פעולה אם המשתמש שכח סיסמה

@@ -23,6 +23,7 @@ class LoginViewModel : ViewModel() {
     // פונקציה להתחברות
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
+            // מבצע את ההתחברות ומקבל את ה-UID של המשתמש אם הצליח
             val uid = userRepository.loginUser(email, password)
 
             if (uid != null) {
@@ -34,6 +35,7 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
+
 
     // פונקציה להתנתקות
     fun logoutUser() {
