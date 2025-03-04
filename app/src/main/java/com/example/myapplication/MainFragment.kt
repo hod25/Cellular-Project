@@ -41,5 +41,8 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         view.findViewById<Button>(R.id.FeedButton).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_feedFragment)
         }
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener( {
+            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+        })
     }
 }
