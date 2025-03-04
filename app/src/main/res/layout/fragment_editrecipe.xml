@@ -7,13 +7,13 @@
     android:background="@color/background">
 
     <TextView
-        android:id="@+id/appTitleEditUser2"
+        android:id="@+id/appTitleEditRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:minHeight="48dp"
-        android:text="@string/dish_for"
+        android:text="@string/edit_recipe"
         android:textColor="@color/title"
         android:textSize="64sp"
         android:textStyle="bold"
@@ -28,7 +28,7 @@
         android:layout_marginTop="64dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2"
+        app:layout_constraintTop_toBottomOf="@+id/appTitleEditRecipe"
         app:srcCompat="@drawable/pesto" />
 
     <EditText
@@ -50,8 +50,7 @@
         android:textSize="28sp"
         app:layout_constraintEnd_toStartOf="@+id/imagePreview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2" />
-
+        app:layout_constraintTop_toBottomOf="@+id/appTitleEditRecipe" />
 
     <ImageView
         android:id="@+id/deleteRecipe"
@@ -60,7 +59,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="52dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitleEditUser2"
+        app:layout_constraintTop_toBottomOf="@+id/appTitleEditRecipe"
         app:srcCompat="@drawable/bin" />
 
     <androidx.fragment.app.FragmentContainerView
@@ -102,5 +101,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
