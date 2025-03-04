@@ -3,15 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/studentsListFragment"
-        android:icon="@android:drawable/btn_star_big_on"
-        android:title="List" />
+        android:id="@+id/feedFragment"
+            android:icon="@android:drawable/menu_full_frame"
+        android:title="Feed" />
     <item
-        android:id="@+id/addStudentFragment"
+        android:id="@+id/createRecipeFragment"
         android:icon="@android:drawable/ic_input_add"
         android:title="Add" />
     <item
-        android:id="@+id/blueFragment"
+        android:id="@+id/editUserFragment"
         android:icon="@drawable/avatar"
         android:title="Profile" />
 </menu>
