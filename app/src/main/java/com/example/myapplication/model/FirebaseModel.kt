@@ -12,11 +12,14 @@ class RecipeViewModel : ViewModel() {
 
     private val repository = RecipeRepository()
 
-    private val _recipes = MutableLiveData<List<Recipe>>() // רשימת מתכונים
-    val recipes: LiveData<List<Recipe>> = _recipes
+    private val _recipes = MutableLiveData<List<Recipe>?>() // רשימת מתכונים
+    val recipes: MutableLiveData<List<Recipe>?> = _recipes
 
     private val _selectedTags = MutableLiveData<List<String>>()
     val selectedTags: LiveData<List<String>> get() = _selectedTags
+
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
 
     // 1️⃣ שליפת מתכונים מה-Repository
     fun fetchRecipes() {
@@ -52,6 +55,34 @@ class RecipeViewModel : ViewModel() {
             val success = repository.updateRecipe(recipe)
             if (success) fetchRecipes()
         }
+    }
+
+    fun loadRecipe(recipeId: String) {
+        viewModelScope.launch {
+            try {
+                val recipeMap = repository.getRecipe(recipeId) // מחזיר Map<String, Any>
+                if (recipeMap != null) {
+                    val recipe = mapToRecipe(recipeMap) // המרת ה-Map לאובייקט Recipe
+                    _recipes.postValue(listOf(recipe)) // מכניסים לרשימה ושולחים ל-LiveData
+                } else {
+                    _errorMessage.postValue("Error: Recipe not found")
+                }
+            } catch (e: Exception) {
+                _errorMessage.postValue("Error loading recipe: ${e.message}")
+            }
+        }
+    }
+
+    private fun mapToRecipe(recipeMap: Map<String, Any>): Recipe {
+        return Recipe(
+            id = recipeMap["id"] as? String ?: "",
+            title = recipeMap["title"] as? String ?: "",
+//            image = recipeMap["image"] as? String ?: "",
+            ingredients = (recipeMap["ingredients"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
+            tags = (recipeMap["tags"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
+            owner = recipeMap["owner"] as? String ?: "",
+            likes = (recipeMap["likes"] as? Number)?.toInt() ?: 0
+        )
     }
 
     // 4️⃣ מחיקת מתכון

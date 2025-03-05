@@ -16,6 +16,9 @@ import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.RecipeViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
 
@@ -35,39 +38,51 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_editrecipe, container, false)
 
-        // קבלת הנתונים מה-Safe Args
-//        recipeId = args.recipeId
+        // קבלת הנתונים מה-Safe Args (במקום ערך קשיח)
+        recipeId = "AZRZSseSlTBzmltGeB5y" // args.recipeId
 
         // הגדרת השדות
         val titleEditText = view.findViewById<EditText>(R.id.recipeName)
         val saveButton = view.findViewById<Button>(R.id.save)
 
-        // שליפת המתכון הקיים מ-Firebase
-        loadRecipeFromFirebase()
+        // צפייה במתכון מתוך ה- ViewModel
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            recipes?.let {
+                val recipe = it.find { recipe -> recipe.id == recipeId }
+                recipe?.let { recipe ->
+                    titleEditText.setText(recipe.title)
+                    ingredientsList = recipe.ingredients
+                    tagsList = recipe.tags
+                    userId = recipe.owner
+                }
+            }
+        }
 
-        // לחיצה על שמירת המתכון
+        // טעינת המתכון מה- Repository דרך ה- ViewModel
+        recipeViewModel.loadRecipe(recipeId)
+
+        // לחיצה על כפתור שמירה
         saveButton.setOnClickListener {
             val title = titleEditText.text.toString().trim()
 
-            // אם אין כותרת, נעדכן את המשתמש
             if (title.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in title", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // יצירת אובייקט המתכון המעודכן
             val updatedRecipe = Recipe(
+                id = recipeId, // הוספת ה-ID כדי לעדכן את הרשומה הנכונה
                 title = title,
-                ingredients = ingredientsList, // עדכון רכיבים
-                tags = tagsList, // עדכון תגיות
-                owner = userId ?: "Unknown", // אם אין UID נכניס "Unknown"
+                ingredients = ingredientsList,
+                tags = tagsList,
+                owner = userId ?: "Unknown",
                 likes = 0
             )
 
-            // עדכון המתכון ב-Firebase
-            updateRecipeInFirebase(updatedRecipe)
+            // עדכון דרך ה- ViewModel
+            recipeViewModel.updateRecipe(updatedRecipe)
 
-            // ניווט לעמוד הפיד אחרי השמירה
+            // מעבר למסך הראשי
             findNavController().navigate(R.id.feedFragment)
         }
 
@@ -75,14 +90,14 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
     }
 
     // שליפת המתכון מ-Firebase
-    private fun loadRecipeFromFirebase() {
+    suspend private fun loadRecipeFromFirebase() {
         val recipeRef = db.collection("recipes").document(recipeId)
 
         recipeRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
+                    Log.d("EditRecipeFragment", "DocumentSnapshot data: ${document}")
                     val recipe = document.toObject(Recipe::class.java)
-
                     // מלא את השדות עם נתוני המתכון הקיים
                     recipe?.let {
                         ingredientsList = it.ingredients

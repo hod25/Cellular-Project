@@ -39,8 +39,10 @@ class FeedFragment : Fragment() {
 
         // עדכון הרשימה עם הנתונים שהתקבלו
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            var recipePreviews = viewModel.castRecipeToPreview(recipes)
-            adapter.setRecipes(recipePreviews)
+            var recipePreviews = recipes?.let { viewModel.castRecipeToPreview(it) }
+            if (recipePreviews != null) {
+                adapter.setRecipes(recipePreviews)
+            }
         }
 
         return view

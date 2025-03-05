@@ -22,7 +22,7 @@
             app:destination="@id/createRecipeFragment" />
         <action
             android:id="@+id/action_mainFragment_to_editRecipeFragment"
-            app:destination="@id/createRecipeFragment" />
+            app:destination="@id/EditRecipeFragment" />
         <action
             android:id="@+id/action_mainFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
@@ -54,6 +54,15 @@
     </fragment>
 
     <fragment
+        android:id="@+id/EditRecipeFragment"
+        android:name="com.example.myapplication.EditRecipeFragment"
+        android:label="EditRecipeFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_editRecipeFragment"
+            app:destination="@id/EditRecipeFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/editUserFragment"
         android:name="com.example.myapplication.EditUserFragment"
         android:label="EditUserFragment" />
@@ -65,5 +74,7 @@
     <argument
         android:name="recipeId"
         app:argType="string" />
+
+
 
 </navigation>

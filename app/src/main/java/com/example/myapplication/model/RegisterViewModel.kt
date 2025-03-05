@@ -3,6 +3,7 @@ package com.example.myapplication.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,4 +49,5 @@ class RegisterViewModel : ViewModel() {
             }
         }
     }
+
 }

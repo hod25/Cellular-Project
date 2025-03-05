@@ -44,6 +44,16 @@ class RecipeRepository {
         }
     }
 
+    suspend fun getRecipe(recipeId: String): Map<String, Any>?  {
+        return try {
+            val document = database.collection("Recipes").document(recipeId).get().await()
+            if (document.exists()) document.data else null
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error fetching recipe", e)
+            null
+        }
+    }
+
     suspend fun deleteRecipe(recipeId: String): Boolean {
         return try {
             database.collection(collectionName).document(recipeId).delete().await()
