@@ -70,4 +70,36 @@ class UserRepository {
             null
         }
     }
+
+    // פונקציה לעדכון פרטי המשתמש ב-Firestore
+    suspend fun updateUserData(uid: String, firstName: String, lastName: String, password: String): Boolean {
+        return try {
+            // עדכון נתונים ב-Firestore
+            val user = hashMapOf(
+                "firstName" to firstName,
+                "lastName" to lastName
+            )
+            db.collection("users").document(uid).update(user as Map<String, Any>).await()
+
+            // עדכון סיסמא ב-FirebaseAuth
+            val userFirebase = auth.currentUser
+            userFirebase?.updatePassword(password)?.await()
+
+            true
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error updating user data: ${e.localizedMessage}")
+            false
+        }
+    }
+
+    suspend fun saveUserImage(uid: String, imageUrl: String): Boolean {
+        return try {
+            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+            userRef.update("profileImageUrl", imageUrl).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }

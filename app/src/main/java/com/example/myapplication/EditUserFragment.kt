@@ -19,8 +19,19 @@ import android.view.ViewGroup
 import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
+import android.widget.EditText
 import androidx.activity.result.ActivityResult
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.example.myapplication.Adapter.TagsAdapter
+import com.example.myapplication.repository.UserRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class EditUserFragment : Fragment() {
     private lateinit var selectedTagsContainer: GridLayout
@@ -30,6 +41,15 @@ class EditUserFragment : Fragment() {
     private lateinit var addTagButton: Button
     private lateinit var imagePreview: ImageView
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
+
+    private lateinit var firstNameEditText: EditText
+    private lateinit var lastNameEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var saveButton: Button
+    private lateinit var logoutButton: Button  // כפתור ההתנתקות
+
+    private val userRepository = UserRepository()
+    private var currentUserId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -45,6 +65,28 @@ class EditUserFragment : Fragment() {
         addTagButton = view.findViewById(R.id.addTagButton)
         tagSelectionRecyclerView = view.findViewById(R.id.tagSelectionRecyclerView)
         tagSelectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        imagePreview = view.findViewById(R.id.imagePreview)
+
+        firstNameEditText = view.findViewById(R.id.firstNameEditUser)
+        lastNameEditText = view.findViewById(R.id.lastNameEditUser)
+        passwordEditText = view.findViewById(R.id.passwordEditUser)
+        saveButton = view.findViewById(R.id.saveUserChanges)
+        logoutButton = view.findViewById(R.id.logoutButton)  // אתחול כפתור ההתנתקות
+
+        // Fetch the current user ID
+        currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        currentUserId?.let {
+            fetchUserData(it)
+        }
+
+        saveButton.setOnClickListener {
+            saveUserChanges()
+        }
+
+        // הוספת מאזין לכפתור ההתנתקות
+        logoutButton.setOnClickListener {
+            logoutUser()
+        }
 
         val adapter = TagsAdapter(mutableListOf("Vegetarian", "Gluten", "Vegan", "Lactose"))
         tagSelectionRecyclerView.adapter = adapter
@@ -58,7 +100,10 @@ class EditUserFragment : Fragment() {
             toggleTagSelection()
         }
 
-        imagePreview = view.findViewById(R.id.imagePreview)
+        imagePreview.setOnClickListener {
+            openImagePicker()
+        }
+
         selectImageLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
@@ -68,10 +113,18 @@ class EditUserFragment : Fragment() {
                 imageUri?.let { imagePreview.setImageURI(it) }
             }
         }
+    }
 
-        imagePreview.setOnClickListener {
-            openImagePicker()
-        }
+    // כשיש לך את ה-logoutButton, כך תעשה את החלפת ה-Fragment
+    private fun logoutUser() {
+        FirebaseAuth.getInstance().signOut() // התנתקות מהמשתמש
+
+    // הסתרת ה-Bottom Navigation
+    (activity as? MainActivity)?.hideBottomNavigation()
+
+        // מעבר ל-LoginFragment דרך ה-NavController
+        val navController = requireActivity().findNavController(R.id.nav_host_fragment)
+        navController.navigate(R.id.loginFragment)
     }
 
     private fun toggleTagSelection() {
@@ -104,5 +157,93 @@ class EditUserFragment : Fragment() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         intent.type = "image/*"
         selectImageLauncher.launch(intent)
+    }
+
+    private fun fetchUserData(uid: String) {
+        // Fetch user data from Firestore
+        viewLifecycleOwner.lifecycleScope.launch {
+            val userData = userRepository.getUserData(uid)
+            userData?.let {
+                firstNameEditText.setText(it["firstName"] as? String ?: "")
+                lastNameEditText.setText(it["lastName"] as? String ?: "")
+                // Password not fetched due to security concerns
+            }
+        }
+    }
+
+    private fun saveUserChanges() {
+        val firstName = firstNameEditText.text.toString()
+        val lastName = lastNameEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        currentUserId?.let {
+            // Update the user data
+            viewLifecycleOwner.lifecycleScope.launch {
+                val success = userRepository.saveUserData(it, firstName, lastName, FirebaseAuth.getInstance().currentUser?.email ?: "")
+                if (success) {
+                    // Successfully saved, handle UI update or message
+                } else {
+                    // Show error
+                }
+
+                if (password.isNotEmpty()) {
+                    // If password is entered, update it
+                    updatePassword(password)
+                }
+            }
+        }
+    }
+
+    private fun updatePassword(password: String) {
+        // Update user password using FirebaseAuth
+        FirebaseAuth.getInstance().currentUser?.updatePassword(password)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Password updated successfully
+                } else {
+                    // Show error
+                }
+            }
+    }
+
+    private fun uploadImageToCloudinary(imageUri: Uri) {
+        MediaManager.get().upload(imageUri)
+            .callback(object : UploadCallback {
+                override fun onStart(requestId: String?) {
+                    println("Upload started")
+                }
+
+                override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
+                    val progress = (bytes * 100) / totalBytes
+                    println("Upload progress: $progress%")
+                }
+
+                override fun onSuccess(requestId: String?, resultData: Map<*, *>?) {
+                    val imageUrl = resultData?.get("url") as String?
+                    println("Uploaded image URL: $imageUrl")
+                    // ניתן לשמור את הקישור ב-Firestore
+                    saveImageUrlToFirestore(imageUrl)
+                }
+
+                override fun onError(requestId: String?, error: ErrorInfo?) {
+                    println("Upload error: ${error?.description}")
+                }
+
+                override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
+            })
+            .dispatch()
+    }
+
+    private fun saveImageUrlToFirestore(imageUrl: String?) {
+        if (imageUrl == null || currentUserId == null) return
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val success = userRepository.saveUserImage(currentUserId!!, imageUrl)
+            if (success) {
+                println("Image URL saved successfully!")
+            } else {
+                println("Failed to save image URL")
+            }
+        }
     }
 }

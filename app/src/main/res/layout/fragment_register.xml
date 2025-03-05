@@ -39,6 +39,13 @@
             android:textSize="48sp"
             android:textStyle="bold" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminate="true" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,13 +166,6 @@
             android:minHeight="48dp"
             android:text="@string/have_an_account"
             android:textColor="@color/black" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:indeterminate="true" />
 
     </LinearLayout>
 </ScrollView>
