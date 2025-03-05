@@ -11,27 +11,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.RecipeViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-import android.app.AlertDialog
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
-import android.provider.MediaStore
-import android.widget.ImageView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
-import com.example.myapplication.model.UserViewModel
-
-
 class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
 
+    // שימוש ב-Safe Args לקבלת הערכים
+//    private val args: EditRecipeFragmentArgs by navArgs()
     private lateinit var recipeId: String
     private lateinit var ingredientsList: List<String>
     private lateinit var tagsList: List<String>
@@ -46,8 +35,8 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_editrecipe, container, false)
 
-        // קבלת הנתונים מה-Arguments של ה-Fragment (ללא Safe Args)
-        recipeId = arguments?.getString("recipeId") ?: "" // ברירת מחדל אם לא נמצא
+        // קבלת הנתונים מה-Safe Args
+//        recipeId = args.recipeId
 
         // הגדרת השדות
         val titleEditText = view.findViewById<EditText>(R.id.recipeName)
