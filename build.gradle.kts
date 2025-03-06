@@ -3,10 +3,11 @@ buildscript {
     repositories {
         google()  // מאגר של Google (דרוש עבור Firebase ו-Google Services)
         mavenCentral()
+        maven("https://jitpack.io" )
     }
     dependencies {
         classpath(libs.androidx.navigation.safe.args.gradle.plugin)
-        classpath(libs.google.services) // תלות ב-Google Services Plugin
+        classpath(libs.google.services) // תלות ב-Google Services Plugin)
     }
 }
 
