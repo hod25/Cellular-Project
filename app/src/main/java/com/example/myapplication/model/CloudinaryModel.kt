@@ -20,7 +20,7 @@ import android.net.Uri
 import android.widget.Toast
 import com.idz.myapplication.base.MyApplication.Globals.context
 
-private fun uploadImage(uri: Uri) {
+public fun uploadImage(uri: Uri) {
     // העלאת התמונה ל-Cloudinary
     val request = MediaManager.get().upload(uri)
         .callback(object : UploadCallback {

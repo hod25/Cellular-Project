@@ -56,6 +56,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         val deleteIcon = view.findViewById<ImageView>(R.id.deleteRecipe)
         val editTextTitle = view.findViewById<EditText>(R.id.recipeName)
         val buttonSave = view.findViewById<Button>(R.id.save)
+        val buttonSurpriseMe = view.findViewById<Button>(R.id.surpriseMe)
         imagePreview = view.findViewById(R.id.imagePreview)
 
         deleteIcon?.setOnClickListener {
@@ -95,6 +96,14 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         imagePreview.setOnClickListener {
             openImagePicker()
         }
+
+        buttonSurpriseMe.setOnClickListener{
+            recipeViewModel.fetchRandomRecipe(userId ?: "Unknown")
+            Toast.makeText(requireContext(), "Added random recipe from api", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.feedFragment)
+        }
+
+
 
         buttonSave?.setOnClickListener {
             val title = editTextTitle?.text.toString().trim()

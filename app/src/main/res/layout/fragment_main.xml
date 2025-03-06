@@ -52,6 +52,12 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/orange"
         android:text="@string/edit_recipe" />
+    <Button
+        android:id="@+id/viewRecipeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange"
+        android:text="@string/view_recipe" />
 
     <Button
         android:id="@+id/FeedButton"

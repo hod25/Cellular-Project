@@ -1,5 +1,6 @@
 package com.example.myapplication.model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.repository.RecipeRepository
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class RecipeViewModel : ViewModel() {
 
@@ -21,10 +23,15 @@ class RecipeViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
+    private val recipeRepository = RecipeRepository()  // אתה יכול גם להשתמש ב-APIRepository אם יש לך
+
+
+
     // 1️⃣ שליפת מתכונים מה-Repository
     fun fetchRecipes() {
         viewModelScope.launch {
             val recipeList = repository.getAllRecipes()
+
             _recipes.value = recipeList
         }
     }
@@ -91,5 +98,56 @@ class RecipeViewModel : ViewModel() {
             val success = repository.deleteRecipe(recipeId)
             if (success) fetchRecipes()
         }
+    }
+
+    fun fetchRandomRecipe(uid: String) {
+        viewModelScope.launch {
+            try {
+                // שליפת המתכון האקראי מה-Repository
+                val fetchedApiRecipe = recipeRepository.getRandomRecipe()
+                //Log.d("mashoo", fetchedApiRecipe.toString())
+                if (fetchedApiRecipe == null) {
+                    return@launch
+                }
+                // המרת המתכון מ-ApiRecipeD ל-Recipe
+                val fetchedRecipe = toRecipe(fetchedApiRecipe,uid)
+            } catch (e: Exception) {
+                Log.e("RecipeViewModel", "Error fetching random recipe", e)
+            }
+        }
+    }
+
+    fun toRecipe(apiRecipeD: ApiRecipeD, uid: String): Recipe {
+        // יצירת רשימה ריקה של מרכיבים
+        val ingredientsList = mutableListOf<String>()
+
+        // איסוף המרכיבים מתוך שדות כמו strIngredient1, strIngredient2... strIngredient20
+        for (i in 1..20) {
+            // יצירת שם השדה על פי מספר המרכיב
+            val fieldName = "strIngredient$i"
+
+            // שים לב, זה מבוצע בעזרת reflection
+            val field = apiRecipeD.javaClass.getDeclaredField(fieldName)
+            field.isAccessible = true // מאפשר גישה לשדה, גם אם הוא לא ציבורי
+            val ingredient = field.get(apiRecipeD) as? String
+
+            // אם יש מרכיב, מוסיפים אותו לרשימה
+            if (!ingredient.isNullOrBlank()) {
+                ingredientsList.add(ingredient)
+            }
+        }
+
+        // טיפול בבעיה אם strMeal או idMeal מגיעים כ-null
+        Log.d("Ingredients", (apiRecipeD.idMeal == null).toString())
+
+        // יצירת אובייקט Recipe עם ערך ברירת מחדל אם השדה null
+        return Recipe(
+            id = apiRecipeD.idMeal ?: LocalDateTime.now().toString(),  // אם idMeal null, נשתמש ב-LocalDateTime
+            title = apiRecipeD.strMeal ?: "Unknown Title",  // אם strMeal null, נשתמש ב-"Unknown Title"
+            image = apiRecipeD.strMealThumb ?: "",  // אם strMealThumb null, נשתמש במיתר ריק
+            ingredients = ingredientsList,  // רשימת המרכיבים המורכבת
+            owner = uid,
+            likes = 0
+        )
     }
 }

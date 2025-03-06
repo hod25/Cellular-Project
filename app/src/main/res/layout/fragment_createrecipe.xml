@@ -85,6 +85,22 @@
                 android:textSize="24sp"
                 android:layout_gravity="center_horizontal" />
 
+            <Button
+                android:id="@+id/surpriseMe"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:backgroundTint="@color/green"
+                android:minHeight="48dp"
+                android:shadowColor="#000000"
+                android:shadowDx="8"
+                android:shadowDy="2"
+                android:shadowRadius="1.6"
+                android:text="Surprise Me"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+
         </LinearLayout>
     </ScrollView>
 

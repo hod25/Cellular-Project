@@ -27,6 +27,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.myapplication.Adapter.TagsAdapter
+import com.example.myapplication.model.UserViewModel
 import com.example.myapplication.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,6 +36,7 @@ import kotlinx.coroutines.tasks.await
 
 class EditUserFragment : Fragment() {
     private lateinit var selectedTagsContainer: GridLayout
+
     private val selectedTags = mutableListOf<String>()
     private lateinit var tagSelectionContainer: LinearLayout
     private lateinit var tagSelectionRecyclerView: RecyclerView
@@ -50,6 +52,7 @@ class EditUserFragment : Fragment() {
 
     private val userRepository = UserRepository()
     private var currentUserId: String? = null
+    private val userViewModel = UserViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -176,19 +179,28 @@ class EditUserFragment : Fragment() {
         val lastName = lastNameEditText.text.toString()
         val password = passwordEditText.text.toString()
 
+        val selectedImageUri: Uri? = null // פה אתה צריך לשמור את ה-URI של התמונה שנבחרה
+
         currentUserId?.let {
             // Update the user data
+
+
             viewLifecycleOwner.lifecycleScope.launch {
                 val success = userRepository.saveUserData(it, firstName, lastName, FirebaseAuth.getInstance().currentUser?.email ?: "")
                 if (success) {
-                    // Successfully saved, handle UI update or message
+                    println("User data updated successfully")
                 } else {
-                    // Show error
+                    println("Failed to update user data")
                 }
 
                 if (password.isNotEmpty()) {
                     // If password is entered, update it
                     updatePassword(password)
+                }
+                // 🔹 העלאת תמונה
+                selectedImageUri?.let { uri ->
+                    // 🔹 העלאת התמונה ל-Cloudinary
+                    userViewModel.uploadImage(uri, it)
                 }
             }
         }
@@ -204,46 +216,5 @@ class EditUserFragment : Fragment() {
                     // Show error
                 }
             }
-    }
-
-    private fun uploadImageToCloudinary(imageUri: Uri) {
-        MediaManager.get().upload(imageUri)
-            .callback(object : UploadCallback {
-                override fun onStart(requestId: String?) {
-                    println("Upload started")
-                }
-
-                override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
-                    val progress = (bytes * 100) / totalBytes
-                    println("Upload progress: $progress%")
-                }
-
-                override fun onSuccess(requestId: String?, resultData: Map<*, *>?) {
-                    val imageUrl = resultData?.get("url") as String?
-                    println("Uploaded image URL: $imageUrl")
-                    // ניתן לשמור את הקישור ב-Firestore
-                    saveImageUrlToFirestore(imageUrl)
-                }
-
-                override fun onError(requestId: String?, error: ErrorInfo?) {
-                    println("Upload error: ${error?.description}")
-                }
-
-                override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
-            })
-            .dispatch()
-    }
-
-    private fun saveImageUrlToFirestore(imageUrl: String?) {
-        if (imageUrl == null || currentUserId == null) return
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            val success = userRepository.saveUserImage(currentUserId!!, imageUrl)
-            if (success) {
-                println("Image URL saved successfully!")
-            } else {
-                println("Failed to save image URL")
-            }
-        }
     }
 }
