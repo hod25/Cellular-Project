@@ -1,7 +1,11 @@
 package com.example.myapplication.repository
 
 import android.util.Log
+import com.example.myapplication.model.ApiRecipeD
 import com.example.myapplication.model.Recipe
+import com.example.myapplication.model.networking.RecipeApi
+import com.example.myapplication.model.networking.RetrofitInstance
+import com.example.myapplication.model.networking.RetrofitInstance.api
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -61,6 +65,14 @@ class RecipeRepository {
         } catch (e: Exception) {
             Log.e("Firebase", "Error deleting recipe", e)
             false
+        }
+    }
+    suspend fun getRandomRecipe(): ApiRecipeD? {
+        return try {
+            api.getRandomRecipe()
+        } catch (e: Exception) {
+            Log.e("API", "Error fetching random recipe from TheMealDB", e)
+            null // מחזיר null במקרה של שגיאה
         }
     }
 }

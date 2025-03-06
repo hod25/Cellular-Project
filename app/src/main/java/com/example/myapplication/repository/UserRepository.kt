@@ -1,9 +1,15 @@
 package com.example.myapplication.repository
 
+import android.net.Uri
 import android.util.Log
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.resume
 
 class UserRepository {
 
@@ -92,14 +98,47 @@ class UserRepository {
         }
     }
 
-    suspend fun saveUserImage(uid: String, imageUrl: String): Boolean {
-        return try {
-            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
-            userRef.update("profileImageUrl", imageUrl).await()
-            true
-        } catch (e: Exception) {
-            false
+//    suspend fun saveUserImage(uid: String, imageUrl: String): Boolean {
+//        return try {
+//            val userRef = FirebaseFirestore.getInstance().collection("users").document(uid)
+//            userRef.update("profileImageUrl", imageUrl).await()
+//            true
+//        } catch (e: Exception) {
+//            false
+//        }
+//    }
+
+    suspend fun uploadImageToCloudinary(imageUri: Uri): String? {
+        return suspendCancellableCoroutine { continuation ->
+            MediaManager.get().upload(imageUri)
+                .callback(object : UploadCallback {
+                    override fun onSuccess(requestId: String?, resultData: Map<*, *>?) {
+                        val imageUrl = resultData?.get("secure_url") as? String
+                        continuation.resume(imageUrl)
+                    }
+
+                    override fun onError(requestId: String?, error: ErrorInfo?) {
+                        continuation.resume(null)
+                    }
+
+                    override fun onStart(requestId: String?) {}
+                    override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {}
+                    override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
+                })
+                .dispatch()
         }
     }
 
+    suspend fun saveUserImage(userId: String, imageUrl: String): Boolean {
+        return try {
+            db.collection("users")
+                .document(userId)
+                .update("profileImageUrl", imageUrl)
+                .await()
+            true
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error saving user image: ${e.localizedMessage}")
+            false
+        }
+    }
 }
