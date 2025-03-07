@@ -54,7 +54,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 (requireActivity() as MainActivity).showBottomNavigation()
 
                 // ניווט למסך אחר, למשל מסך הבית
-                findNavController().navigate(R.id.createRecipeFragment)
+                findNavController().navigate(R.id.feedFragment)
             } else {
                 // הצגת שגיאה במידה וההתחברות נכשלה
                 val errorMessage = loginViewModel.errorMessage.value ?: "התחברות נכשלה"

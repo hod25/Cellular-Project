@@ -61,8 +61,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                         if (task.isSuccessful) {
                             // אם ההרשמה הצליחה, נרצה לחבר את המשתמש
                             val user = FirebaseAuth.getInstance().currentUser
+
                             if (user != null) {
                                 Toast.makeText(requireContext(), "הרשמה הצליחה!", Toast.LENGTH_SHORT).show()
+
+                                // ✅ הצגת ה-Bottom Navigation
+                                (activity as? MainActivity)?.showBottomNavigation()
 
                                 // ניווט לפיד או למסך הבית
                                 findNavController().navigate(R.id.feedFragment) // שנה ל-feedFragment שלך
