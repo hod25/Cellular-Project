@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android) version "1.9.0"
-    alias(libs.plugins.androidx.navigation.safeargs)
     id("kotlin-kapt")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
 
     implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.generativeai)
 //    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

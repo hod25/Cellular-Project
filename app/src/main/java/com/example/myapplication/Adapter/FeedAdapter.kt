@@ -1,6 +1,8 @@
 package com.example.myapplication.Adapter
 
 import android.content.Context
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +11,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.findNavController
 import com.example.myapplication.CommentsListFragment
+import com.example.myapplication.FeedFragmentDirections
 import com.example.myapplication.R
-import com.example.myapplication.StaticTagsFragment
+import com.example.myapplication.RecipePreviewFragment
 import com.example.myapplication.model.Comment
 import com.example.myapplication.model.RecipePreview
+import com.google.ai.client.generativeai.type.content
+import java.util.ArrayList
 
 class FeedAdapter(
     private val context: Context,
-    private var recipes: List<RecipePreview>,
-    private val fragmentManager: FragmentManager // העברת ה-FragmentManager לאדפטר
+    var recipes: List<RecipePreview>,
+    private val fragmentManager: FragmentManager
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -44,26 +50,27 @@ class FeedAdapter(
         val imageView: ImageView = view.findViewById(R.id.image)
         imageView.setImageResource(R.drawable.pesto)
 
-        // הצגת התגיות
-        val tagFragmentContainer: FragmentContainerView = view.findViewById(R.id.tagFragment)
-        val tagFragmentTransaction = fragmentManager.beginTransaction()
-        val staticTagsFragment = StaticTagsFragment.newInstance(recipe.tags)
-        tagFragmentTransaction.replace(tagFragmentContainer.id, staticTagsFragment)
-        tagFragmentTransaction.commit()
+        // הצגת התגובות ישירות בפרגמנט
+        val recipePreviewFragment = RecipePreviewFragment()
+        recipePreviewFragment.setRecipe(recipe)
 
-        // הצגת תגובות
-        val commentsFragmentContainer: FragmentContainerView = view.findViewById(R.id.comments)
-        val commentsFragmentTransaction = fragmentManager.beginTransaction()
-        val commentList = recipe.comments.map { Comment(recipe = "", content = it, imageResId = R.drawable.pesto) }
+        // הצגת הפרגמנט בתוך התצוגה
+        //val commentAdapter = CommentsAdapter(context, recipe.comments) // ייתכן שתצטרך ליצור את CommentAdapter
+        //recipePreviewFragment.commentsListView?.adapter = commentAdapter
 
-        val commentsFragmentInstance = CommentsListFragment (commentList)
-        commentsFragmentTransaction.replace(commentsFragmentContainer.id, commentsFragmentInstance)
-        commentsFragmentTransaction.commit()
+        view.setOnClickListener {
+            Log.d("click","recipe "+recipe.id)
+            val navController = (context as? androidx.fragment.app.FragmentActivity)
+                ?.findNavController(R.id.nav_host_fragment)
+            val action = FeedFragmentDirections.actionFeedFragmentToViewRecipeFragment(recipe.id)
+            // שליחת ה-ID של המתכון ל-ViewRecipeFragment
+            navController?.navigate(action)
+        }
 
         return view
     }
 
-    fun setRecipes(recipes: List<RecipePreview>) {
+    fun updateRecipes(recipes: List<RecipePreview>) {
         this.recipes = recipes
         notifyDataSetChanged()
     }

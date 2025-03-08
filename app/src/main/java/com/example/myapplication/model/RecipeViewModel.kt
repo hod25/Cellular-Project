@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
+import com.example.myapplication.repository.CommentRepository
 import com.example.myapplication.repository.RecipeRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -17,6 +18,10 @@ class RecipeViewModel : ViewModel() {
     private val _recipes = MutableLiveData<List<Recipe>?>() // רשימת מתכונים
     val recipes: MutableLiveData<List<Recipe>?> = _recipes
 
+    private val _selectedRecipe = MutableLiveData<Recipe?>()
+    val selectedRecipe: LiveData<Recipe?> get() = _selectedRecipe
+
+
     private val _selectedTags = MutableLiveData<List<String>>()
     val selectedTags: LiveData<List<String>> get() = _selectedTags
 
@@ -24,7 +29,10 @@ class RecipeViewModel : ViewModel() {
     val errorMessage: LiveData<String?> get() = _errorMessage
 
     private val recipeRepository = RecipeRepository()  // אתה יכול גם להשתמש ב-APIRepository אם יש לך
+    private val commentRepository = CommentRepository()
 
+    private val _comments = MutableLiveData<List<Comment>>()
+    val comments: LiveData<List<Comment>> get() = _comments
 
 
     // 1️⃣ שליפת מתכונים מה-Repository
@@ -39,6 +47,7 @@ class RecipeViewModel : ViewModel() {
     fun castRecipeToPreview(recipes:List<Recipe>) : List<RecipePreview> {
         val recipePreviews = recipes.map { recipe ->
             RecipePreview(
+                id = recipe.id,
                 title = recipe.title,
                 imageRes = R.drawable.pesto, // או השתמש בתמונה לפי ה-URL, תוכל להוריד את התמונה ולהמיר אותה ל-Drawable
                 tags = recipe.tags,
@@ -70,7 +79,8 @@ class RecipeViewModel : ViewModel() {
                 val recipeMap = repository.getRecipe(recipeId) // מחזיר Map<String, Any>
                 if (recipeMap != null) {
                     val recipe = mapToRecipe(recipeMap) // המרת ה-Map לאובייקט Recipe
-                    _recipes.postValue(listOf(recipe)) // מכניסים לרשימה ושולחים ל-LiveData
+                    Log.d("Recipe","recipe:"+recipe)
+                    _selectedRecipe.value = recipe
                 } else {
                     _errorMessage.postValue("Error: Recipe not found")
                 }
@@ -150,4 +160,17 @@ class RecipeViewModel : ViewModel() {
             likes = 0
         )
     }
+
+    fun fetchCommentsForRecipe(recipeId: String) {
+        viewModelScope.launch {
+            try {
+                val commentsList = commentRepository.getCommentsForRecipe(recipeId)
+                _comments.value = commentsList // עדכון ה-LiveData ישירות ברשימת התגובות
+                Log.d("viewmodel",commentsList.toString())
+            } catch (e: Exception) {
+                Log.e("RecipeViewModel", "Error fetching comments for recipe $recipeId", e)
+            }
+        }
+    }
+
 }

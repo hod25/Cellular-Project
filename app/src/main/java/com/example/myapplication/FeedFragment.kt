@@ -1,19 +1,18 @@
 package com.example.myapplication
 
-    import android.os.Bundle
-    import android.view.LayoutInflater
-    import android.view.View
-    import android.view.ViewGroup
-    import android.widget.ArrayAdapter
-    import android.widget.ListView
-    import androidx.fragment.app.Fragment
-    import androidx.lifecycle.ViewModelProvider
-    import androidx.recyclerview.widget.LinearLayoutManager
-    import androidx.recyclerview.widget.RecyclerView
-    import com.example.myapplication.Adapter.FeedAdapter
-    import com.example.myapplication.model.RecipePreview
-    import com.example.myapplication.model.RecipeViewModel
-
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ListView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.setFragmentResultListener
+import com.example.myapplication.Adapter.FeedAdapter
+import com.example.myapplication.model.Comment
+import com.example.myapplication.model.RecipeViewModel
 
 class FeedFragment : Fragment() {
     private lateinit var viewModel: RecipeViewModel
@@ -25,26 +24,44 @@ class FeedFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_feed, container, false)
 
-        // חיבור ל-ListView ולא ל-RecyclerView
         listView = view.findViewById(R.id.recipes)
-
         viewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 
-        // יצירת האדפטר ל-ListView
         adapter = FeedAdapter(requireContext(), emptyList(), childFragmentManager)
         listView.adapter = adapter
 
-        // שליפה יזומה מה-ViewModel
-        viewModel.fetchRecipes() // שליחה ל-ViewModel לשלוף נתונים מ-Firebase
+        // האזנה לתוצאות כדי לוודא עדכון של הרשימה כשחוזרים אחורה
+        parentFragmentManager.setFragmentResultListener("refreshFeed", this) { _, _ ->
+            refreshFeed()
+        }
+        Log.d("createview","created")
+        return view
+    }
 
-        // עדכון הרשימה עם הנתונים שהתקבלו
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        refreshFeed()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshFeed()
+    }
+
+    private fun refreshFeed() {
+        viewModel.fetchRecipes() // שליפה מחדש מה-ViewModel
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            var recipePreviews = recipes?.let { viewModel.castRecipeToPreview(it) }
+            // פעולות ברגע שמגיעים נתונים חדשים
+            val recipePreviews = recipes?.let { viewModel.castRecipeToPreview(it) }
             if (recipePreviews != null) {
-                adapter.setRecipes(recipePreviews)
+                // עדכון התגובות עבור כל מתכון
+                //recipePreviews.forEach { recipePreview ->
+                    //viewModel.fetchCommentsForRecipe(recipePreview.id)
+                //}
+                // עדכון הרשימה של המתכונים
+                adapter.updateRecipes(recipePreviews)
+                adapter.notifyDataSetChanged() // עדכון ה-ListView
             }
         }
-
-        return view
     }
 }

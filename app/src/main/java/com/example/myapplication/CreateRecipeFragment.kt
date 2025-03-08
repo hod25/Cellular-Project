@@ -51,6 +51,11 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         userViewModel.userId.observe(viewLifecycleOwner) { uid ->
             userId = uid
         }
+        val ingredientsFragment = IngredientsListFragment().apply {
+            arguments = Bundle().apply {
+                putBoolean("isViewRecipe", false) // לא מדובר ב-ViewRecipe
+            }
+        }
 
         // חיפוש רכיבים עם בדיקה למניעת קריסה
         val deleteIcon = view.findViewById<ImageView>(R.id.deleteRecipe)

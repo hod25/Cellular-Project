@@ -76,7 +76,12 @@
         android:id="@+id/feedFragment"
         android:name="com.example.myapplication.FeedFragment"
         android:label="FeedFragment"
-    tools:layout="@layout/fragment_editrecipe"/>
+    tools:layout="@layout/fragment_editrecipe">
+        <action
+            android:id="@+id/action_feedFragment_to_viewRecipeFragment"
+            app:destination="@id/viewRecipeFragment" />
+        <argument android:name="recipeId" />
+    </fragment>
     <argument
         android:name="recipeId"
         app:argType="string" />
@@ -88,5 +93,8 @@
     <argument
         android:name="recipeId"
         app:argType="string" />
+        <action
+            android:id="@+id/action_viewRecipeFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
     </fragment>
 </navigation>
