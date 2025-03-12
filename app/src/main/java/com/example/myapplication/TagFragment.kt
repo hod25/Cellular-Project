@@ -100,7 +100,6 @@ class TagFragment : Fragment() {
             }
             .setPositiveButton("Confirm") { _, _ ->
                 updateTagsInGrid()
-                Log.d("tags",selectedTags.t)
                 recipeViewModel.filterRecipesByTags(selectedTags)
             }
             .setNegativeButton("Cancel", null)
