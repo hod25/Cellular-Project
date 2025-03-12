@@ -33,6 +33,12 @@ class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
         // קביעה אם מדובר ב- ViewRecipe או CreateRecipe
         isViewRecipe = arguments?.getBoolean("isViewRecipe", false) ?: false
 
+        // הסתרת הכפתור אם מדובר ב-ViewRecipe
+        addIngredientButton?.visibility = if (isViewRecipe) View.GONE else View.VISIBLE
+
+        // קביעה אם מדובר ב- ViewRecipe או CreateRecipe
+        isViewRecipe = arguments?.getBoolean("isViewRecipe", false) ?: false
+
         adapter = IngredientAdapter(requireContext(), items, sharedViewModel, isViewRecipe)
         listView.adapter = adapter
 

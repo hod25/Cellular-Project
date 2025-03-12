@@ -65,6 +65,13 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
+    fun addLike(id:String) {
+        viewModelScope.launch {
+            val success = repository.addLike(id)
+            if (success) fetchRecipes()
+        }
+    }
+
     // 3️⃣ עדכון מתכון
     fun updateRecipe(recipe: Recipe) {
         viewModelScope.launch {

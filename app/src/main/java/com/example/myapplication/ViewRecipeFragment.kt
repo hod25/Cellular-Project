@@ -24,21 +24,23 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
     private lateinit var recipeId: String
     private lateinit var recipeTitle: TextView
     private lateinit var recipeImage: ImageView
-    private lateinit var ingredientsList: List<String>
-    private lateinit var tagsList: List<String>
     private lateinit var comment: EditText
     private lateinit var saveComment: Button
     private lateinit var commentsListView: ListView
     private lateinit var commentsAdapter: CommentsAdapter
-
+    private lateinit var likesTextView: TextView
+    private lateinit var heartImageView: ImageView
     private val commentViewModel : CommentViewModel by activityViewModels()
     private val recipeViewModel: RecipeViewModel by activityViewModels()
+    private var likeClicked: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recipeTitle = view.findViewById(R.id.recipeName)
         recipeImage = view.findViewById(R.id.imagePreview)
+        heartImageView = view.findViewById(R.id.imageView)
+        likesTextView = view.findViewById(R.id.likes)
         val ingredientsFragmentContainer: View = view.findViewById(R.id.ingredientList)
 
         recipeId = arguments?.getString("recipeId") ?: return
@@ -60,6 +62,7 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
                         putBoolean("isViewRecipe", true) // מעביר את המידע אם מדובר ב-ViewRecipe
                     }
                 }
+                likesTextView.text = it.likes.toString()
                 childFragmentManager.beginTransaction()
                     .replace(ingredientsFragmentContainer.id, ingredientsFragment)
                     .commit()
@@ -94,6 +97,19 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
             commentsAdapter.comments = comments
             commentsAdapter.notifyDataSetChanged()
             Log.d("adapter",commentsAdapter.comments.toString())
+        }
+
+
+        heartImageView.setOnClickListener {
+            if (!likeClicked) {
+                val currentLikes = likesTextView.text.toString().toInt()
+                val newLikes = currentLikes + 1
+                likesTextView.text = newLikes.toString()
+
+                // אפשר להוסיף כאן עדכון לייקים במסד נתונים או ב-ViewModel
+                recipeViewModel.addLike(recipeId)
+                likeClicked = true;
+            }
         }
     }
 }

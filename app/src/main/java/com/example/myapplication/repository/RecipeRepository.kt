@@ -6,6 +6,7 @@ import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.networking.RecipeApi
 import com.example.myapplication.model.networking.RetrofitInstance
 import com.example.myapplication.model.networking.RetrofitInstance.api
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -75,4 +76,21 @@ class RecipeRepository {
             null // מחזיר null במקרה של שגיאה
         }
     }
+
+    suspend fun addLike(recipeId: String) : Boolean {
+        return try {
+            val recipeRef = database.collection(collectionName).document(recipeId)
+
+            database.runTransaction { transaction ->
+                val snapshot = transaction.get(recipeRef)
+                val currentLikes = snapshot.getLong("likes") ?: 0
+                transaction.update(recipeRef, "likes", currentLikes + 1)
+            }
+            return true
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error adding like", e)
+            false
+        }
+    }
+
 }
