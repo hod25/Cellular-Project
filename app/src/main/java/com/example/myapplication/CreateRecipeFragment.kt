@@ -103,9 +103,14 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         }
 
         buttonSurpriseMe.setOnClickListener{
-            recipeViewModel.fetchRandomRecipe(userId ?: "Unknown")
-            Toast.makeText(requireContext(), "Added random recipe from api", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.feedFragment)
+            val succeed = recipeViewModel.fetchRandomRecipe(userId ?: "Unknown")
+            if(succeed) {
+                Toast.makeText(requireContext(), "Added random recipe from api", Toast.LENGTH_SHORT)
+                    .show()
+                findNavController().navigate(R.id.feedFragment)
+            }
+            else
+                Toast.makeText(requireContext(), "Adding random recipe failed", Toast.LENGTH_SHORT).show()
         }
 
 

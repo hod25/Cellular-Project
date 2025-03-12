@@ -3,10 +3,13 @@ package com.example.myapplication.repository
 import android.util.Log
 import com.example.myapplication.model.ApiRecipeD
 import com.example.myapplication.model.Recipe
-import com.example.myapplication.model.networking.RecipeApi
+import com.example.myapplication.model.networking.RecipeApiResponse
 import com.example.myapplication.model.networking.RetrofitInstance
 import com.example.myapplication.model.networking.RetrofitInstance.api
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.dataObjects
+import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -70,11 +73,39 @@ class RecipeRepository {
     }
     suspend fun getRandomRecipe(): ApiRecipeD? {
         return try {
-            api.getRandomRecipe()
+            val response : RecipeApiResponse = api.getRandomRecipe()
+            Log.d("API Response", response.toString())
+            response.meals?.firstOrNull()
         } catch (e: Exception) {
             Log.e("API", "Error fetching random recipe from TheMealDB", e)
-            null // מחזיר null במקרה של שגיאה
+            null
         }
+    }
+
+    fun filterRecipesByTags(tags: List<String>, callback: (List<Recipe>) -> Unit) {
+        var query: Query = database.collection(collectionName)
+
+        // אם יש תגיות, נוסיף כל אחת בנפרד
+        if (tags.isNotEmpty()) {
+            for (tag in tags) {
+                query = query.whereArrayContains("tags", tag)
+            }
+        }
+        // שליפת המתכונים
+        query.get()
+            .addOnSuccessListener { result ->
+                val recipes = mutableListOf<Recipe>()
+                for (document in result) {
+                    val recipe = document.toObject(Recipe::class.java)
+                    recipes.add(recipe)
+                }
+                Log.d("query", recipes.toString())
+                // החזרת התוצאות דרך callback
+                callback(recipes)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firebase", "Error getting documents: ", exception)
+            }
     }
 
     suspend fun addLike(recipeId: String) : Boolean {

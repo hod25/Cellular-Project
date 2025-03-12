@@ -34,6 +34,31 @@ class RecipeViewModel : ViewModel() {
     private val _comments = MutableLiveData<List<Comment>>()
     val comments: LiveData<List<Comment>> get() = _comments
 
+    private val _filteredRecipes = MutableLiveData<List<RecipePreview>?>()
+    val filteredRecipes: LiveData<List<RecipePreview>?> = _filteredRecipes
+
+    fun searchRecipes(query: String) {
+        val lowerCaseQuery = query.lowercase()
+
+        // המרת המתכונים מ-Recipe ל-RecipePreview
+        val previewRecipes = castRecipeToPreview(recipes.value ?: emptyList())
+
+        // חיפוש לפי כותרת או לפי תגיות
+        val filteredList = previewRecipes.filter { recipe ->
+            recipe.title.lowercase().contains(lowerCaseQuery) ||
+                    recipe.tags.any { it.lowercase().contains(lowerCaseQuery) }
+        }
+
+        _filteredRecipes.value = filteredList
+    }
+
+    fun filterRecipesByTags(tags: List<String>) {
+        recipeRepository.filterRecipesByTags(tags) { recipes ->
+            _recipes.value = recipes
+            _filteredRecipes.value = castRecipeToPreview(recipes)
+            Log.d("recipes",_recipes.value.toString())
+        }
+    }
 
     // 1️⃣ שליפת מתכונים מה-Repository
     fun fetchRecipes() {
@@ -117,20 +142,24 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    fun fetchRandomRecipe(uid: String) {
-        viewModelScope.launch {
-            try {
-                // שליפת המתכון האקראי מה-Repository
-                val fetchedApiRecipe = recipeRepository.getRandomRecipe()
-                //Log.d("mashoo", fetchedApiRecipe.toString())
-                if (fetchedApiRecipe == null) {
-                    return@launch
-                }
-                // המרת המתכון מ-ApiRecipeD ל-Recipe
-                val fetchedRecipe = toRecipe(fetchedApiRecipe,uid)
-            } catch (e: Exception) {
-                Log.e("RecipeViewModel", "Error fetching random recipe", e)
+    fun fetchRandomRecipe(uid: String) : Boolean {
+        return try {
+            viewModelScope.launch {
+                    // שליפת המתכון האקראי מה-Repository
+                    val fetchedApiRecipe = recipeRepository.getRandomRecipe()
+                    Log.d("mashoo", fetchedApiRecipe.toString())
+                    if (fetchedApiRecipe == null) {
+                        return@launch
+                    }
+                    // המרת המתכון מ-ApiRecipeD ל-Recipe
+                    val fetchedRecipe = toRecipe(fetchedApiRecipe, uid)
+                    val success = repository.addRecipe(fetchedRecipe)
+                    if (success) fetchRecipes() // ריענון הנתונים אחרי הוספה
             }
+            true
+        } catch (e: Exception) {
+            Log.e("RecipeViewModel", "Error fetching random recipe", e)
+            false
         }
     }
 
