@@ -18,6 +18,7 @@ import com.example.myapplication.model.Comment
 import com.example.myapplication.model.CommentViewModel
 import com.example.myapplication.model.RecipeViewModel
 import android.widget.ListView
+import androidx.fragment.app.replace
 
 class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
 
@@ -42,7 +43,7 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
         heartImageView = view.findViewById(R.id.imageView)
         likesTextView = view.findViewById(R.id.likes)
         val ingredientsFragmentContainer: View = view.findViewById(R.id.ingredientList)
-
+        val tagsFragmentContainer: View = view.findViewById(R.id.tagsList)
         recipeId = arguments?.getString("recipeId") ?: return
 
         recipeViewModel.loadRecipe(recipeId)
@@ -62,9 +63,16 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
                         putBoolean("isViewRecipe", true) // מעביר את המידע אם מדובר ב-ViewRecipe
                     }
                 }
+                val tagsFragment = StaticTagsFragment().apply {
+                    arguments = Bundle().apply {
+                        putStringArrayList("tags", ArrayList(it.tags))
+                        putBoolean("isViewRecipe", true) // מעביר את המידע אם מדובר ב-ViewRecipe
+                    }
+                }
                 likesTextView.text = it.likes.toString()
                 childFragmentManager.beginTransaction()
                     .replace(ingredientsFragmentContainer.id, ingredientsFragment)
+                    .replace(tagsFragmentContainer.id,tagsFragment)
                     .commit()
             }
         }
