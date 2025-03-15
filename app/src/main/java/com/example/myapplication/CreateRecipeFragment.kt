@@ -3,6 +3,8 @@ package com.example.myapplication
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,6 +27,7 @@ import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.RecipeViewModel
 import com.example.myapplication.model.UserViewModel
 import com.example.myapplication.utils.extensions.TagsViewModel
+import java.io.ByteArrayOutputStream
 
 class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
 
@@ -37,6 +40,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
     private var tagsList: List<String> = listOf()
     private val userViewModel: UserViewModel by activityViewModels()
     private var userId: String? = null
+    private var imageUri:Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,7 +97,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val imageUri: Uri? = result.data?.data
+                imageUri = result.data?.data
                 imageUri?.let { imagePreview.setImageURI(it) }
             }
         }
@@ -118,6 +122,14 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         buttonSave?.setOnClickListener {
             val title = editTextTitle?.text.toString().trim()
 
+            if (imageUri != null) {
+                // אם ה-URI תקין, המשך לשלוח ל-Cloudinary
+                Log.d("Image URI", "URI: $imageUri")
+            } else {
+                Toast.makeText(requireContext(), "Image URI is invalid", Toast.LENGTH_SHORT).show()
+            }
+
+
             if (title.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in title", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -128,10 +140,11 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 ingredients = ingredientsList,
                 tags = tagsList,
                 owner = userId ?: "Unknown",
-                likes = 0
+                likes = 0,
+                image = imageUri.toString()
             )
 
-            recipeViewModel.addRecipe(recipe)
+            recipeViewModel.addRecipe(requireContext(),recipe)
             Toast.makeText(requireContext(), "Recipe saved successfully", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.feedFragment)
         }

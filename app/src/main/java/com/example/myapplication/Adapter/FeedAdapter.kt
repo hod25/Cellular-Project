@@ -17,15 +17,13 @@ import com.example.myapplication.CommentsListFragment
 import com.example.myapplication.FeedFragmentDirections
 import com.example.myapplication.R
 import com.example.myapplication.RecipePreviewFragment
-import com.example.myapplication.model.Comment
 import com.example.myapplication.model.RecipePreview
 import com.example.myapplication.model.RecipeViewModel
 import com.example.myapplication.model.UserViewModel
-import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.ArrayList
+import com.squareup.picasso.Picasso
 
 class FeedAdapter(
     private val context: Context,
@@ -52,18 +50,23 @@ class FeedAdapter(
         val view: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.fragment_recipepreview, parent, false)
 
         val recipe = recipes[position]
+        Log.d("Image",recipe.imageUrl)
 
         val titleTextView: TextView = view.findViewById(R.id.title)
         titleTextView.text = recipe.title
 
         val imageView: ImageView = view.findViewById(R.id.image)
-        imageView.setImageResource(R.drawable.pesto)
+        Picasso.get()
+            .load(if (!recipe.imageUrl.isNullOrEmpty()) recipe.imageUrl else null)
+            .placeholder(R.drawable.pesto)
+            .error(R.drawable.pesto)
+            .fit()
+            .centerCrop()
+            .into(imageView)
 
-        // הצגת התגובות ישירות בפרגמנט
-        val recipePreviewFragment = RecipePreviewFragment()
-        recipePreviewFragment.setRecipe(recipe)
+        //val recipePreviewFragment = RecipePreviewFragment()
+        //recipePreviewFragment.setRecipe(recipe)
 
-        // הצגת הפרגמנט בתוך התצוגה
         //val commentAdapter = CommentsAdapter(context, recipe.comments) // ייתכן שתצטרך ליצור את CommentAdapter
         //recipePreviewFragment.commentsListView?.adapter = commentAdapter
 

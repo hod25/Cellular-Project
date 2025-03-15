@@ -1,19 +1,29 @@
 package com.example.myapplication.model
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
+import com.example.myapplication.repository.CloudinaryRepository
 import com.example.myapplication.repository.CommentRepository
 import com.example.myapplication.repository.RecipeRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDateTime
 
 class RecipeViewModel : ViewModel() {
 
     private val repository = RecipeRepository()
+    val cloudinaryRepository = CloudinaryRepository()
+    val collectionName = "RecipeImages"
 
     private val _recipes = MutableLiveData<List<Recipe>?>() // רשימת מתכונים
     val recipes: MutableLiveData<List<Recipe>?> = _recipes
@@ -36,6 +46,37 @@ class RecipeViewModel : ViewModel() {
 
     private val _filteredRecipes = MutableLiveData<List<RecipePreview>?>()
     val filteredRecipes: LiveData<List<RecipePreview>?> = _filteredRecipes
+
+    fun getFileFromUri(context: Context, uri: String): File? {
+        val fileUri = Uri.parse(uri)
+        val cursor = context.contentResolver.query(fileUri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                val fileName = it.getString(columnIndex)
+                val file = File(context.cacheDir, fileName)
+
+                context.contentResolver.openInputStream(fileUri)?.use { inputStream ->
+                    FileOutputStream(file).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
+                return file
+            }
+        }
+        return null
+    }
+
+    // פונקציה להעלות את הקובץ ל-Cloudinary
+    private suspend fun uploadImageAndGetUrl(image: File): String? {
+        return try {
+            // העלאת התמונה ל-Cloudinary ומקבלת את ה-URL
+            cloudinaryRepository.uploadImage(image, collectionName)?.replace("http://", "https://") // שלח את הקונטקסט כאן
+        } catch (e: Exception) {
+            Log.e("CloudinaryError", "Failed to upload image", e)
+            null
+        }
+    }
 
     fun searchRecipes(query: String) {
         val lowerCaseQuery = query.lowercase()
@@ -96,7 +137,7 @@ class RecipeViewModel : ViewModel() {
             RecipePreview(
                 id = recipe.id,
                 title = recipe.title,
-                imageRes = R.drawable.pesto, // או השתמש בתמונה לפי ה-URL, תוכל להוריד את התמונה ולהמיר אותה ל-Drawable
+                imageUrl = recipe.image,
                 tags = recipe.tags,
                 comments = listOf() // אפשר להוסיף את התגובות אם יש לך מידע עליהם
             )
@@ -105,10 +146,26 @@ class RecipeViewModel : ViewModel() {
     }
 
     // 2️⃣ הוספת מתכון
-    fun addRecipe(recipe: Recipe) {
+    /*fun addRecipe(context: Context, recipe: Recipe) {
         viewModelScope.launch {
             val success = repository.addRecipe(recipe)
             if (success) fetchRecipes() // ריענון הנתונים אחרי הוספה
+        }
+        uploadRecipeImage(recipe.image)
+    }*/
+
+    fun addRecipe(context: Context, recipe: Recipe) {
+        CoroutineScope(Dispatchers.IO).launch {
+            // העלאת התמונה
+            val imageFile = getFileFromUri(context,recipe.image) // נניח שהתמונה שמורה כבר כ-File
+            val imageUrl = imageFile?.let { uploadImageAndGetUrl(it) }
+
+            // עדכון ה-Recipe עם ה-URL של התמונה
+            val updatedRecipe = imageUrl?.let { recipe.copy(image = it) }
+
+            // הוספת המתכון ל-Repository
+            val success = updatedRecipe?.let { repository.addRecipe(it) }
+            if (success == true) fetchRecipes() // ריענון הנתונים אחרי הוספה
         }
     }
 

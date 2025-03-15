@@ -74,6 +74,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.constraintlayout)
+    implementation ("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

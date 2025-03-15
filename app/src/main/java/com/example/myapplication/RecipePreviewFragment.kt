@@ -58,12 +58,6 @@ class RecipePreviewFragment : Fragment() {
     // פונקציה שתעדכן את המתכון ואת התגובות
     fun setRecipe(recipe: RecipePreview) {
         this.recipe = recipe
-
-        // אם ה-Fragment מוצמד לפעילות, נעדכן את האדפטר
-        //if (isAdded) {
-            //commentsAdapter?.comments = recipe.comments
-            //commentsAdapter?.notifyDataSetChanged()
-        //}
     }
 }
 
