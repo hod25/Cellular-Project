@@ -6,6 +6,7 @@ import com.example.myapplication.model.Recipe
 import com.example.myapplication.model.networking.RecipeApiResponse
 import com.example.myapplication.model.networking.RetrofitInstance
 import com.example.myapplication.model.networking.RetrofitInstance.api
+import com.google.android.gms.tasks.Tasks.await
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.dataObjects
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.ktx.dataObjects
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import kotlin.contracts.Returns
 
 class RecipeRepository {
 
@@ -27,6 +29,20 @@ class RecipeRepository {
             }
         } catch (e: Exception) {
             Log.e("Firebase", "Error fetching recipes", e)
+            emptyList()
+        }
+    }
+
+    suspend fun getUserRecipes(userId: String): List<Recipe> {
+        return try {
+            val result = database.collection(collectionName)
+                .whereEqualTo("owner", userId) // מסנן לפי בעל המתכון
+                .get()
+                .await()
+
+            result.documents.mapNotNull { it.toObject(Recipe::class.java) }
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error fetching user recipes", e)
             emptyList()
         }
     }
@@ -81,10 +97,29 @@ class RecipeRepository {
             null
         }
     }
+    suspend fun filterRecipesByTags(tags: List<String>): List<Recipe> {
+        return try {
+            if (tags.isEmpty()) return emptyList() // ✅ מחזיר רשימה ריקה אם אין תגיות
 
-    fun filterRecipesByTags(tags: List<String>, callback: (List<Recipe>) -> Unit) {
+            var query: Query = database.collection(collectionName)
+            for (tag in tags) {
+                query = query.whereArrayContains("tags", tag)
+            }
+
+            // ✅ מחכה לתוצאה במקום להשתמש ב-Listeners
+            val result = query.get().await()
+
+            // ✅ ממיר את המסמכים לאובייקטים של Recipe
+            result.documents.mapNotNull { it.toObject(Recipe::class.java) }
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error fetching recipes", e)
+            emptyList() // ✅ במקרה של שגיאה מחזיר רשימה ריקה במקום לקרוס
+        }
+    }
+
+    /*fun filterRecipesByTags(tags: List<String>) : MutableList<Recipe> {
         var query: Query = database.collection(collectionName)
-
+        val recipes = mutableListOf<Recipe>()
         // אם יש תגיות, נוסיף כל אחת בנפרד
         if (tags.isNotEmpty()) {
             for (tag in tags) {
@@ -94,19 +129,16 @@ class RecipeRepository {
         // שליפת המתכונים
         query.get()
             .addOnSuccessListener { result ->
-                val recipes = mutableListOf<Recipe>()
                 for (document in result) {
                     val recipe = document.toObject(Recipe::class.java)
                     recipes.add(recipe)
                 }
-                Log.d("query", recipes.toString())
-                // החזרת התוצאות דרך callback
-                callback(recipes)
             }
             .addOnFailureListener { exception ->
                 Log.e("Firebase", "Error getting documents: ", exception)
             }
-    }
+        return recipes
+    }*/
 
     suspend fun addLike(recipeId: String) : Boolean {
         return try {

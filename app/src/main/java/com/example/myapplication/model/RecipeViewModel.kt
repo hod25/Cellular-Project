@@ -53,9 +53,12 @@ class RecipeViewModel : ViewModel() {
     }
 
     fun filterRecipesByTags(tags: List<String>) {
-        recipeRepository.filterRecipesByTags(tags) { recipes ->
-            _recipes.value = recipes
-            _filteredRecipes.value = castRecipeToPreview(recipes)
+        _recipes.value = emptyList()
+
+        viewModelScope.launch {
+            Log.d("recipes",_recipes.value.toString())
+            val recipeList = recipeRepository.filterRecipesByTags(tags)
+            _recipes.value = recipeList
             Log.d("recipes",_recipes.value.toString())
         }
     }
@@ -68,6 +71,25 @@ class RecipeViewModel : ViewModel() {
             _recipes.value = recipeList
         }
     }
+
+    fun fetchMyRecipes(uid: String) {
+        viewModelScope.launch {
+            val recipeList = repository.getUserRecipes(uid)
+            _recipes.value = recipeList
+            _filteredRecipes.value = castRecipeToPreview(recipeList)
+        }
+    }
+
+    suspend fun isRecipeMine(userId: String, recipeId: String): Boolean {
+        return try {
+            val userRecipes = repository.getUserRecipes(userId)
+            userRecipes.any { it.id == recipeId }
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error checking recipe ownership", e)
+            false
+        }
+    }
+
 
     fun castRecipeToPreview(recipes:List<Recipe>) : List<RecipePreview> {
         val recipePreviews = recipes.map { recipe ->

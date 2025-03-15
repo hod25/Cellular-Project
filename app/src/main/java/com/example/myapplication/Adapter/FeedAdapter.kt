@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.example.myapplication.CommentsListFragment
 import com.example.myapplication.FeedFragmentDirections
@@ -18,13 +19,21 @@ import com.example.myapplication.R
 import com.example.myapplication.RecipePreviewFragment
 import com.example.myapplication.model.Comment
 import com.example.myapplication.model.RecipePreview
+import com.example.myapplication.model.RecipeViewModel
+import com.example.myapplication.model.UserViewModel
 import com.google.ai.client.generativeai.type.content
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 class FeedAdapter(
     private val context: Context,
     var recipes: List<RecipePreview>,
-    private val fragmentManager: FragmentManager
+    val recipeViewModel: RecipeViewModel = RecipeViewModel(),
+    val userViewModel: UserViewModel = UserViewModel()
+
+
 ) : BaseAdapter() {
 
     override fun getCount(): Int {
@@ -62,9 +71,17 @@ class FeedAdapter(
             Log.d("click","recipe "+recipe.id)
             val navController = (context as? androidx.fragment.app.FragmentActivity)
                 ?.findNavController(R.id.nav_host_fragment)
-            val action = FeedFragmentDirections.actionFeedFragmentToViewRecipeFragment(recipe.id)
-            // שליחת ה-ID של המתכון ל-ViewRecipeFragment
-            navController?.navigate(action)
+            var action : NavDirections? = null
+            val uid = userViewModel.userId.value
+            if (uid != null) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (recipeViewModel.isRecipeMine(uid, recipe.id))
+                        action =  FeedFragmentDirections.actionFeedFragmentToEditRecipeFragment(recipe.id)
+                    else
+                        action =  FeedFragmentDirections.actionFeedFragmentToViewRecipeFragment(recipe.id)
+                    navController?.navigate(action?:FeedFragmentDirections.actionFeedFragmentToViewRecipeFragment(recipe.id))
+                }
+            }
         }
 
         return view
