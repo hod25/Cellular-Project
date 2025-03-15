@@ -205,7 +205,7 @@ class RecipeViewModel : ViewModel() {
         return Recipe(
             id = recipeMap["id"] as? String ?: "",
             title = recipeMap["title"] as? String ?: "",
-//            image = recipeMap["image"] as? String ?: "",
+            image = recipeMap["image"] as? String ?: "",
             ingredients = (recipeMap["ingredients"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
             tags = (recipeMap["tags"] as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
             owner = recipeMap["owner"] as? String ?: "",

@@ -19,6 +19,7 @@ import com.example.myapplication.model.CommentViewModel
 import com.example.myapplication.model.RecipeViewModel
 import android.widget.ListView
 import androidx.fragment.app.replace
+import com.squareup.picasso.Picasso
 
 class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
 
@@ -55,7 +56,14 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
         recipeViewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             recipe?.let {
                 recipeTitle.text = it.title
-                recipeImage.setImageResource(R.drawable.pesto)
+                Log.d("Image",recipe.image)
+                Picasso.get()
+                    .load(if (!recipe.image.isNullOrEmpty()) recipe.image else null)
+                    .placeholder(R.drawable.pesto)
+                    .error(R.drawable.pesto)
+                    .fit()
+                    .centerCrop()
+                    .into(recipeImage)
 
                 val ingredientsFragment = IngredientsListFragment().apply {
                     arguments = Bundle().apply {
