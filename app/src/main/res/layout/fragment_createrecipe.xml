@@ -49,6 +49,10 @@
                 android:cursorVisible="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:shadowColor="#000000"
+                android:shadowDx="4"
+                android:shadowDy="2"
+                android:shadowRadius="1.6"
                 android:text="@string/recipe_title"
                 android:textColor="@color/green"
                 android:textSize="28sp" />

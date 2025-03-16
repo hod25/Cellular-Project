@@ -25,7 +25,7 @@ class TagFragment : Fragment() {
     private lateinit var recipeViewModel: RecipeViewModel
 
     private val defaultTags = listOf(
-        "milk", "gluten", "meat"
+        "milk", "gluten", "meat","eggs","sugar"
     )
 
     override fun onCreateView(

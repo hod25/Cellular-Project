@@ -13,10 +13,8 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
-import com.example.myapplication.CommentsListFragment
 import com.example.myapplication.FeedFragmentDirections
 import com.example.myapplication.R
-import com.example.myapplication.RecipePreviewFragment
 import com.example.myapplication.model.RecipePreview
 import com.example.myapplication.model.RecipeViewModel
 import com.example.myapplication.model.UserViewModel

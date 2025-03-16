@@ -47,9 +47,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:shadowColor="#FFFFFF"
+                android:shadowDx="8"
+                android:shadowDy="4"
+                android:shadowRadius="1.6"
                 android:text="@string/first_name"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/firstNameEditUser"
@@ -66,9 +71,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:shadowColor="#FFFFFF"
+                android:shadowDx="8"
+                android:shadowDy="4"
                 android:text="@string/last_name"
                 android:textColor="@color/black"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/lastNameEditUser"
@@ -102,10 +111,14 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/green"
-            android:minHeight="48dp"
-            android:text="@string/save"
+            android:shadowColor="#000000"
+            android:shadowDx="8"
+            android:shadowDy="4"
+            android:shadowRadius="1.6"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:minHeight="48dp"
+            android:text="@string/save" />
 
         <Button
             android:id="@+id/logoutButton"
@@ -113,8 +126,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/red"
+            android:backgroundTint="@color/design_default_color_error"
             android:minHeight="48dp"
+            android:shadowColor="#000000"
+            android:shadowDx="8"
+            android:shadowDy="4"
+            android:shadowRadius="1.6"
             android:text="@string/logout"
             android:textColor="@color/white"
             android:textSize="24sp" />
