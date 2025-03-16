@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class IngredientsViewModel : ViewModel() {
-    private val _ingredients = MutableLiveData<List<String>>(emptyList())
-    val ingredients: LiveData<List<String>> = _ingredients
+    private var _ingredients = MutableLiveData<List<String>>(emptyList())
+    var ingredients: LiveData<List<String>> = _ingredients
 
     fun addIngredient(ingredient: String) {
         _ingredients.value = _ingredients.value?.toMutableList()?.apply { add(ingredient) }
@@ -19,4 +19,8 @@ class IngredientsViewModel : ViewModel() {
     fun removeAllIngredients() {
         _ingredients.value = emptyList()
     }
+    public fun setIngredients(newIngredients: List<String>) {
+        _ingredients.value = newIngredients.toList() // מעדכן רשימה חדשה כדי שה-Observer יזהה שינוי
+    }
+
 }

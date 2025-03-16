@@ -30,39 +30,27 @@ class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
         val listView: ListView = view.findViewById(R.id.ingredients)
         val addIngredientButton: Button? = view.findViewById(R.id.addIngredientButton)
 
-        // קביעה אם מדובר ב- ViewRecipe או CreateRecipe
         isViewRecipe = arguments?.getBoolean("isViewRecipe", false) ?: false
-
-        // הסתרת הכפתור אם מדובר ב-ViewRecipe
         addIngredientButton?.visibility = if (isViewRecipe) View.GONE else View.VISIBLE
-
-        // קביעה אם מדובר ב- ViewRecipe או CreateRecipe
-        isViewRecipe = arguments?.getBoolean("isViewRecipe", false) ?: false
 
         adapter = IngredientAdapter(requireContext(), items, sharedViewModel, isViewRecipe)
         listView.adapter = adapter
 
-        // טוען רכיבים מתוך ה- arguments אם קיימים (לשימוש ב- ViewRecipeFragment)
         arguments?.getStringArrayList("ingredients")?.let {
             items.clear()
             items.addAll(it)
             adapter.notifyDataSetChanged()
+            sharedViewModel.setIngredients(it) // עדכון ה-ViewModel עם הנתונים שהתקבלו
         }
 
-        // טוען רכיבים מ- ViewModel אם אין רשימה ב- arguments (לשימוש ב- CreateRecipeFragment)
         sharedViewModel.ingredients.observe(viewLifecycleOwner) { newIngredients ->
-            if (arguments == null || arguments?.getStringArrayList("ingredients") == null) {
-                items.clear()
-                items.addAll(newIngredients)
-                adapter.notifyDataSetChanged()
-            }
+            items.clear()
+            items.addAll(newIngredients)
+            adapter.notifyDataSetChanged()
         }
 
-        // הצגת כפתור הוספה רק במסך יצירת מתכון
-        if (addIngredientButton != null && !isViewRecipe) {
-            addIngredientButton.setOnClickListener {
-                showAddIngredientDialog()
-            }
+        addIngredientButton?.setOnClickListener {
+            showAddIngredientDialog()
         }
 
         return view
@@ -88,12 +76,11 @@ class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
     }
 }
 
-
 class IngredientAdapter(
     context: Context,
     private val ingredients: MutableList<String>,
     private val sharedViewModel: IngredientsViewModel,
-    private val isViewRecipe: Boolean // פרמטר נוסף שמציין אם מדובר ב-ViewRecipe או CreateRecipe
+    private val isViewRecipe: Boolean
 ) : ArrayAdapter<String>(context, R.layout.ingredient, ingredients) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -105,7 +92,6 @@ class IngredientAdapter(
 
         itemTextView.text = ingredient
 
-        // אם אנחנו במסך "צפייה במתכון" (ViewRecipe), נסתיר את כפתור המחיקה
         if (isViewRecipe) {
             deleteIcon.visibility = View.GONE
         } else {

@@ -48,15 +48,9 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
         recipeId = arguments?.getString("recipeId") ?: return
 
         recipeViewModel.loadRecipe(recipeId)
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigateUp() // חזרה לדף הקודם
-        }
-
         recipeViewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             recipe?.let {
                 recipeTitle.text = it.title
-                Log.d("Image",recipe.image)
                 Picasso.get()
                     .load(if (!recipe.image.isNullOrEmpty()) recipe.image else null)
                     .placeholder(R.drawable.pesto)

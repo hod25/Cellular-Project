@@ -12,6 +12,7 @@ import com.example.myapplication.R
 import com.example.myapplication.repository.CloudinaryRepository
 import com.example.myapplication.repository.CommentRepository
 import com.example.myapplication.repository.RecipeRepository
+import com.idz.myapplication.base.MyApplication.Globals.context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -177,9 +178,20 @@ class RecipeViewModel : ViewModel() {
     }
 
     // 3️⃣ עדכון מתכון
-    fun updateRecipe(recipe: Recipe) {
-        viewModelScope.launch {
-            val success = repository.updateRecipe(recipe)
+    fun updateRecipe(context: Context, recipe: Recipe) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val imageUrl = if (recipe.image.startsWith("http")) {
+                recipe.image // אם כבר יש URL, השתמש בו
+            } else {
+                // אחרת, העלה את התמונה
+                val imageFile = getFileFromUri(context, recipe.image)
+                imageFile?.let { uploadImageAndGetUrl(it) }
+            }
+
+            // יצירת אובייקט Recipe מעודכן
+            val updatedRecipe = imageUrl?.let { recipe.copy(image = it) } ?: recipe
+
+            val success = repository.updateRecipe(updatedRecipe)
             if (success) fetchRecipes()
         }
     }

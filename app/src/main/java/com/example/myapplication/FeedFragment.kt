@@ -47,6 +47,7 @@ class FeedFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // האזנה לתוצאות כדי לוודא עדכון של הרשימה כשחוזרים אחורה
@@ -56,8 +57,15 @@ class FeedFragment : Fragment() {
         viewModel.fetchRecipes() // שליפה מחדש מה-ViewModel
         refreshFeed()
         myMeals.setOnClickListener {
-            userViewModel.userId.value?.let { it1 -> viewModel.fetchMyRecipes(it1) }
-            userViewModel.userId.value?.let { it1 -> Log.d("uid", it1) }
+            if (myMeals.text == "My Meals") {
+                userViewModel.userId.value?.let { it1 -> viewModel.fetchMyRecipes(it1) }
+                userViewModel.userId.value?.let { it1 -> Log.d("uid", it1) }
+                myMeals.text = "All Recipes"
+            }
+            else if (myMeals.text == "All Recipes") {
+                viewModel.fetchRecipes()
+                myMeals.text = "My Meals"
+            }
         }
     }
 
