@@ -46,6 +46,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        ingredientsViewModel.removeAllIngredients()
         return inflater.inflate(R.layout.fragment_createrecipe, container, false)
     }
 
@@ -125,10 +126,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             if (imageUri != null) {
                 // אם ה-URI תקין, המשך לשלוח ל-Cloudinary
                 Log.d("Image URI", "URI: $imageUri")
-            } else {
-                Toast.makeText(requireContext(), "Image URI is invalid", Toast.LENGTH_SHORT).show()
             }
-
 
             if (title.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in title", Toast.LENGTH_SHORT).show()
@@ -141,7 +139,7 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 tags = tagsList,
                 owner = userId ?: "Unknown",
                 likes = 0,
-                image = imageUri.toString()
+                image = imageUri?.toString() ?: ""
             )
 
             recipeViewModel.addRecipe(requireContext(),recipe)

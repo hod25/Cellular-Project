@@ -157,18 +157,28 @@ class RecipeViewModel : ViewModel() {
 
     fun addRecipe(context: Context, recipe: Recipe) {
         CoroutineScope(Dispatchers.IO).launch {
-            // העלאת התמונה
-            val imageFile = getFileFromUri(context,recipe.image) // נניח שהתמונה שמורה כבר כ-File
-            val imageUrl = imageFile?.let { uploadImageAndGetUrl(it) }
+            try {
+                // ניסיון להעלות תמונה אם יש
+                val imageFile = recipe.image?.let { getFileFromUri(context, it) }
+                val imageUrl = imageFile?.let { uploadImageAndGetUrl(it) } ?: ""
 
-            // עדכון ה-Recipe עם ה-URL של התמונה
-            val updatedRecipe = imageUrl?.let { recipe.copy(image = it) }
+                // יצירת מתכון מעודכן עם כתובת תמונה (או השארת השדה ריק)
+                val updatedRecipe = recipe.copy(image = imageUrl)
 
-            // הוספת המתכון ל-Repository
-            val success = updatedRecipe?.let { repository.addRecipe(it) }
-            if (success == true) fetchRecipes() // ריענון הנתונים אחרי הוספה
+                // הוספת המתכון ל-Repository
+                val success = repository.addRecipe(updatedRecipe)
+
+                if (success) {
+                    fetchRecipes() // ריענון הנתונים אחרי הוספה מוצלחת
+                } else {
+                    Log.e("addRecipe", "Failed to add recipe")
+                }
+            } catch (e: Exception) {
+                Log.e("addRecipe", "Error adding recipe: ${e.message}", e)
+            }
         }
     }
+
 
     fun addLike(id:String) {
         viewModelScope.launch {

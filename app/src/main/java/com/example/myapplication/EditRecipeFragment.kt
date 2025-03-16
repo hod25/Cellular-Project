@@ -79,6 +79,7 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
         recipeViewModel.selectedRecipe.observe(viewLifecycleOwner) { recipe ->
             recipe?.let {
                 titleEditText.setText(it.title)
+                tagsList = recipe.tags
                 imageUrl = it.image
                 isImageChanged = false
 
@@ -134,6 +135,12 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
                 findNavController().navigate(R.id.feedFragment)
             }
         }
+        val deleteButton = view.findViewById<ImageView>(R.id.deleteRecipe)
+        deleteButton.setOnClickListener {
+            recipeViewModel.deleteRecipe(recipeId)
+            findNavController().navigateUp()
+        }
+
 
         selectImageLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()

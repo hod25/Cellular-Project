@@ -27,8 +27,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         // מציאת ה-ProgressBar ב-XML
         progressBar = view.findViewById(R.id.progressBar) // חשוב לוודא ש-id הוא progressBar ב-XML
 
-        val firstNameField = view.findViewById<EditText>(R.id.firstNameRegister)
-        val lastNameField = view.findViewById<EditText>(R.id.lastNameRegister)
         val emailField = view.findViewById<EditText>(R.id.emailRegister)
         val passwordField = view.findViewById<EditText>(R.id.passwordRegister)
         val confirmPasswordField = view.findViewById<EditText>(R.id.confirmPasswordRegister)  // שדה לאימות סיסמא
@@ -36,8 +34,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val alreadyHaveAccount = view.findViewById<TextView>(R.id.alreadyHaveAccount)
 
         signUpButton.setOnClickListener {
-            val firstName = firstNameField.text.toString().trim()
-            val lastName = lastNameField.text.toString().trim()
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
             val confirmPassword = confirmPasswordField.text.toString().trim()
@@ -63,17 +59,14 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                             val user = FirebaseAuth.getInstance().currentUser
 
                             if (user != null) {
-                                Toast.makeText(requireContext(), "הרשמה הצליחה!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), "Registered Successfully", Toast.LENGTH_SHORT).show()
 
-                                // ✅ הצגת ה-Bottom Navigation
                                 (activity as? MainActivity)?.showBottomNavigation()
 
-                                // ניווט לפיד או למסך הבית
-                                findNavController().navigate(R.id.feedFragment) // שנה ל-feedFragment שלך
+                                findNavController().navigate(R.id.loginFragment)
                             }
                         } else {
-                            // אם קרתה שגיאה בהרשמה
-                            val errorMessage = task.exception?.message ?: "הרשמה נכשלה"
+                            val errorMessage = task.exception?.message ?: "Register Failed"
                             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }

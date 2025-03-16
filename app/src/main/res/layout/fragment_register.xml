@@ -53,41 +53,10 @@
             android:layout_marginBottom="12dp"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/firstNameRegister"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:background="@drawable/text_fields"
-                android:hint="@string/first_name"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textStyle="bold" />
-
             <Space
                 android:layout_width="36dp"
                 android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/lastNameRegister"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:background="@drawable/text_fields"
-                android:hint="@string/last_name"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <EditText

@@ -31,7 +31,7 @@ class RegisterViewModel : ViewModel() {
                     // אם ההרשמה הצליחה, נשמור את פרטי המשתמש ב-Firestore
                     val firebaseUser = userRepository.auth.currentUser
                     firebaseUser?.let {
-                        val isDataSaved = userRepository.saveUserData(it.uid, firstName, lastName, email)
+                        val isDataSaved = userRepository.saveUserData(it.uid, firstName, lastName, email, "")
                         if (isDataSaved) {
                             _registerResult.value = true
                         } else {

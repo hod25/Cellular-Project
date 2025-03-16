@@ -5,7 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.UserRepository
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.EmailAuthProvider
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel : ViewModel() {
 
@@ -23,14 +27,13 @@ class LoginViewModel : ViewModel() {
     // פונקציה להתחברות
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            // מבצע את ההתחברות ומקבל את ה-UID של המשתמש אם הצליח
-            val uid = userRepository.loginUser(email, password)
+            val uid = withContext(Dispatchers.IO) { userRepository.loginUser(email, password) }
 
             if (uid != null) {
                 _userId.postValue(uid) // שמירת ה-UID של המשתמש
                 _loginResult.postValue(true)
             } else {
-                _errorMessage.postValue("התחברות נכשלה")
+                _errorMessage.postValue("Authentication Failed")
                 _loginResult.postValue(false)
             }
         }

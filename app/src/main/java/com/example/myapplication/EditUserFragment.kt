@@ -19,40 +19,52 @@ import android.view.ViewGroup
 import android.app.Activity
 import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.myapplication.Adapter.TagsAdapter
+import com.example.myapplication.model.LoginViewModel
 import com.example.myapplication.model.UserViewModel
 import com.example.myapplication.repository.UserRepository
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.File
 
 class EditUserFragment : Fragment() {
     private lateinit var selectedTagsContainer: GridLayout
 
-    private val selectedTags = mutableListOf<String>()
-    private lateinit var tagSelectionContainer: LinearLayout
-    private lateinit var tagSelectionRecyclerView: RecyclerView
     private lateinit var addTagButton: Button
     private lateinit var imagePreview: ImageView
     private lateinit var selectImageLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var firstNameEditText: EditText
     private lateinit var lastNameEditText: EditText
-    private lateinit var passwordEditText: EditText
     private lateinit var saveButton: Button
     private lateinit var logoutButton: Button  // כפתור ההתנתקות
 
     private val userRepository = UserRepository()
     private var currentUserId: String? = null
     private val userViewModel = UserViewModel()
+
+    private var imageUri: Uri? = null
+    var imageUrl:String=""
+    private var isImageChanged = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -63,16 +75,10 @@ class EditUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        selectedTagsContainer = view.findViewById(R.id.tagsRecyclerView)
-        tagSelectionContainer = view.findViewById(R.id.tagSelectionContainer)
-        addTagButton = view.findViewById(R.id.addTagButton)
-        tagSelectionRecyclerView = view.findViewById(R.id.tagSelectionRecyclerView)
-        tagSelectionRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         imagePreview = view.findViewById(R.id.imagePreview)
 
         firstNameEditText = view.findViewById(R.id.firstNameEditUser)
         lastNameEditText = view.findViewById(R.id.lastNameEditUser)
-        passwordEditText = view.findViewById(R.id.passwordEditUser)
         saveButton = view.findViewById(R.id.saveUserChanges)
         logoutButton = view.findViewById(R.id.logoutButton)  // אתחול כפתור ההתנתקות
 
@@ -83,7 +89,9 @@ class EditUserFragment : Fragment() {
         }
 
         saveButton.setOnClickListener {
-            saveUserChanges()
+            CoroutineScope(Dispatchers.IO).launch {
+                saveUserChanges()
+            }
         }
 
         // הוספת מאזין לכפתור ההתנתקות
@@ -91,69 +99,31 @@ class EditUserFragment : Fragment() {
             logoutUser()
         }
 
-        val adapter = TagsAdapter(mutableListOf("Vegetarian", "Gluten", "Vegan", "Lactose"))
-        tagSelectionRecyclerView.adapter = adapter
-
-        adapter.setOnItemClickListener { tag ->
-            toggleTagSelection()
-            addTagToSelection(tag)
-        }
-
-        addTagButton.setOnClickListener {
-            toggleTagSelection()
-        }
-
         imagePreview.setOnClickListener {
             openImagePicker()
         }
 
-        selectImageLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
+        // אתחול של ה-ActivityResultLauncher
+        selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val imageUri: Uri? = data?.data
-                imageUri?.let { imagePreview.setImageURI(it) }
+                imageUri = result.data?.data
+                imageUri?.let {
+                    imagePreview.setImageURI(it)  // הצגת התמונה שנבחרה
+                    isImageChanged = true  // סימון שיש שינוי בתמונה
+                }
             }
         }
     }
 
-    // כשיש לך את ה-logoutButton, כך תעשה את החלפת ה-Fragment
     private fun logoutUser() {
         FirebaseAuth.getInstance().signOut() // התנתקות מהמשתמש
 
-    // הסתרת ה-Bottom Navigation
-    (activity as? MainActivity)?.hideBottomNavigation()
+        // הסתרת ה-Bottom Navigation
+        (activity as? MainActivity)?.hideBottomNavigation()
 
         // מעבר ל-LoginFragment דרך ה-NavController
         val navController = requireActivity().findNavController(R.id.nav_host_fragment)
         navController.navigate(R.id.loginFragment)
-    }
-
-    private fun toggleTagSelection() {
-        tagSelectionContainer.visibility =
-            if (tagSelectionContainer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-    }
-
-    private fun addTagToSelection(tag: String) {
-        selectedTags.add(tag)
-
-        val tagView = TextView(requireContext()).apply {
-            text = tag
-            setPadding(16, 8, 16, 8)
-            textSize = 16F
-        }
-        if (tagView.layoutParams == null) {
-            tagView.layoutParams = GridLayout.LayoutParams()
-        }
-
-        val params = tagView.layoutParams as GridLayout.LayoutParams
-        params.setMargins(16, 16, 16, 16)
-        tagView.layoutParams = params
-        tagView.setBackgroundResource(R.drawable.tags)
-        tagView.setTextColor(Color.WHITE)
-
-        selectedTagsContainer.addView(tagView)
     }
 
     private fun openImagePicker() {
@@ -170,51 +140,44 @@ class EditUserFragment : Fragment() {
                 firstNameEditText.setText(it["firstName"] as? String ?: "")
                 lastNameEditText.setText(it["lastName"] as? String ?: "")
                 // Password not fetched due to security concerns
+                imageUrl = it["image"] as? String?:""
+                if (!imageUrl.isNullOrEmpty()) {
+                    Picasso.get()
+                        .load(imageUrl)
+                        .placeholder(R.drawable.avatar)
+                        .error(R.drawable.avatar)
+                        .into(imagePreview)
+                }
             }
         }
     }
 
-    private fun saveUserChanges() {
+    private suspend fun saveUserChanges() {
         val firstName = firstNameEditText.text.toString()
         val lastName = lastNameEditText.text.toString()
-        val password = passwordEditText.text.toString()
-
-        val selectedImageUri: Uri? = null // פה אתה צריך לשמור את ה-URI של התמונה שנבחרה
 
         currentUserId?.let {
-            // Update the user data
-
+            // אם יש תמונה חדשה, נעלה אותה ל-Cloudinary
+            imageUrl = if (isImageChanged) {
+                imageUri?.let { uri ->
+                    userViewModel.uploadImageAndGetUrl(requireContext(),uri.toString())
+                }?:""
+            } else {
+                imageUrl
+            }
 
             viewLifecycleOwner.lifecycleScope.launch {
-                val success = userRepository.saveUserData(it, firstName, lastName, FirebaseAuth.getInstance().currentUser?.email ?: "")
-                if (success) {
-                    println("User data updated successfully")
-                } else {
-                    println("Failed to update user data")
-                }
-
-                if (password.isNotEmpty()) {
-                    // If password is entered, update it
-                    updatePassword(password)
-                }
-                // 🔹 העלאת תמונה
-                selectedImageUri?.let { uri ->
-                    // 🔹 העלאת התמונה ל-Cloudinary
-                    userViewModel.uploadImage(uri, it)
+                val success = userRepository.saveUserData(it, firstName, lastName, FirebaseAuth.getInstance().currentUser?.email ?: "",imageUrl?:"")
+                withContext(Dispatchers.Main) {
+                    if (success == true) {
+                        Toast.makeText(requireContext(),"User data updated successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(),"Failed to update user data", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
 
-    private fun updatePassword(password: String) {
-        // Update user password using FirebaseAuth
-        FirebaseAuth.getInstance().currentUser?.updatePassword(password)
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Password updated successfully
-                } else {
-                    // Show error
-                }
-            }
-    }
+
 }
