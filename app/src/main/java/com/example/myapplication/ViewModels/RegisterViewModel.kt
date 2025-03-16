@@ -1,9 +1,8 @@
-package com.example.myapplication.model
+package com.example.myapplication.ViewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,16 +18,13 @@ class RegisterViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    // פונקציה להירשם
     fun registerUser(email: String, password: String, firstName: String, lastName: String) {
         // הרצה בקורוטינה (לוגיקת קורוטינה)
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                // שלב 1: רישום המשתמש ב-Firebase Authentication
                 val isRegistered = userRepository.registerUser(email, password)
 
                 if (isRegistered) {
-                    // אם ההרשמה הצליחה, נשמור את פרטי המשתמש ב-Firestore
                     val firebaseUser = userRepository.auth.currentUser
                     firebaseUser?.let {
                         val isDataSaved = userRepository.saveUserData(it.uid, firstName, lastName, email, "")

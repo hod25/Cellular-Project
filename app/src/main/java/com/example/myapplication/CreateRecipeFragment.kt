@@ -3,8 +3,6 @@ package com.example.myapplication
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -23,11 +21,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.ViewModels.IngredientsViewModel
 import com.example.myapplication.model.Recipe
-import com.example.myapplication.model.RecipeViewModel
-import com.example.myapplication.model.UserViewModel
-import com.example.myapplication.utils.extensions.TagsViewModel
-import java.io.ByteArrayOutputStream
+import com.example.myapplication.ViewModels.RecipeViewModel
+import com.example.myapplication.ViewModels.UserViewModel
+import com.example.myapplication.ViewModels.TagsViewModel
 
 class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
 
@@ -62,7 +60,6 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             }
         }
 
-        // חיפוש רכיבים עם בדיקה למניעת קריסה
         val deleteIcon = view.findViewById<ImageView>(R.id.deleteRecipe)
         val editTextTitle = view.findViewById<EditText>(R.id.recipeName)
         val buttonSave = view.findViewById<Button>(R.id.save)
@@ -82,18 +79,15 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
                 .show()
         }
 
-        // מאזין לשינויים ברשימת המרכיבים
         ingredientsViewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
             ingredientsList = ingredients
         }
 
-        // מאזין לשינויים ברשימת התגיות
         tagsViewModel.tags.observe(viewLifecycleOwner) { tags ->
             tagsList = tags
             Log.d("TagsViewModel", "Updated tags: $tags")
         }
 
-        // אתחול של בוחר תמונות
         selectImageLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
@@ -124,7 +118,6 @@ class CreateRecipeFragment : Fragment(R.layout.fragment_createrecipe) {
             val title = editTextTitle?.text.toString().trim()
 
             if (imageUri != null) {
-                // אם ה-URI תקין, המשך לשלוח ל-Cloudinary
                 Log.d("Image URI", "URI: $imageUri")
             }
 

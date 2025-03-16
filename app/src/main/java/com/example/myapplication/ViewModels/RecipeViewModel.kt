@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.ViewModels
 
 import android.content.Context
 import android.net.Uri
@@ -8,11 +8,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.R
+import com.example.myapplication.model.ApiRecipeD
+import com.example.myapplication.model.Comment
+import com.example.myapplication.model.Recipe
+import com.example.myapplication.model.RecipePreview
 import com.example.myapplication.repository.CloudinaryRepository
 import com.example.myapplication.repository.CommentRepository
 import com.example.myapplication.repository.RecipeRepository
-import com.idz.myapplication.base.MyApplication.Globals.context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +41,7 @@ class RecipeViewModel : ViewModel() {
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> get() = _errorMessage
 
-    private val recipeRepository = RecipeRepository()  // אתה יכול גם להשתמש ב-APIRepository אם יש לך
+    private val recipeRepository = RecipeRepository()
     private val commentRepository = CommentRepository()
 
     private val _comments = MutableLiveData<List<Comment>>()
@@ -68,10 +70,8 @@ class RecipeViewModel : ViewModel() {
         return null
     }
 
-    // פונקציה להעלות את הקובץ ל-Cloudinary
     private suspend fun uploadImageAndGetUrl(image: File): String? {
         return try {
-            // העלאת התמונה ל-Cloudinary ומקבלת את ה-URL
             cloudinaryRepository.uploadImage(image, collectionName)?.replace("http://", "https://") // שלח את הקונטקסט כאן
         } catch (e: Exception) {
             Log.e("CloudinaryError", "Failed to upload image", e)
@@ -82,10 +82,8 @@ class RecipeViewModel : ViewModel() {
     fun searchRecipes(query: String) {
         val lowerCaseQuery = query.lowercase()
 
-        // המרת המתכונים מ-Recipe ל-RecipePreview
         val previewRecipes = castRecipeToPreview(recipes.value ?: emptyList())
 
-        // חיפוש לפי כותרת או לפי תגיות
         val filteredList = previewRecipes.filter { recipe ->
             recipe.title.lowercase().contains(lowerCaseQuery) ||
                     recipe.tags.any { it.lowercase().contains(lowerCaseQuery) }
@@ -94,18 +92,6 @@ class RecipeViewModel : ViewModel() {
         _filteredRecipes.value = filteredList
     }
 
-    fun filterRecipesByTags(tags: List<String>) {
-        _recipes.value = emptyList()
-
-        viewModelScope.launch {
-            Log.d("recipes",_recipes.value.toString())
-            val recipeList = recipeRepository.filterRecipesByTags(tags)
-            _recipes.value = recipeList
-            Log.d("recipes",_recipes.value.toString())
-        }
-    }
-
-    // 1️⃣ שליפת מתכונים מה-Repository
     fun fetchRecipes() {
         viewModelScope.launch {
             val recipeList = repository.getAllRecipes()
@@ -140,36 +126,24 @@ class RecipeViewModel : ViewModel() {
                 title = recipe.title,
                 imageUrl = recipe.image,
                 tags = recipe.tags,
-                comments = listOf() // אפשר להוסיף את התגובות אם יש לך מידע עליהם
+                comments = listOf()
             )
         }
         return recipePreviews
     }
 
-    // 2️⃣ הוספת מתכון
-    /*fun addRecipe(context: Context, recipe: Recipe) {
-        viewModelScope.launch {
-            val success = repository.addRecipe(recipe)
-            if (success) fetchRecipes() // ריענון הנתונים אחרי הוספה
-        }
-        uploadRecipeImage(recipe.image)
-    }*/
-
     fun addRecipe(context: Context, recipe: Recipe) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // ניסיון להעלות תמונה אם יש
                 val imageFile = recipe.image?.let { getFileFromUri(context, it) }
                 val imageUrl = imageFile?.let { uploadImageAndGetUrl(it) } ?: ""
 
-                // יצירת מתכון מעודכן עם כתובת תמונה (או השארת השדה ריק)
                 val updatedRecipe = recipe.copy(image = imageUrl)
 
-                // הוספת המתכון ל-Repository
                 val success = repository.addRecipe(updatedRecipe)
 
                 if (success) {
-                    fetchRecipes() // ריענון הנתונים אחרי הוספה מוצלחת
+                    fetchRecipes()
                 } else {
                     Log.e("addRecipe", "Failed to add recipe")
                 }
@@ -187,18 +161,14 @@ class RecipeViewModel : ViewModel() {
         }
     }
 
-    // 3️⃣ עדכון מתכון
     fun updateRecipe(context: Context, recipe: Recipe) {
         CoroutineScope(Dispatchers.IO).launch {
             val imageUrl = if (recipe.image.startsWith("http")) {
-                recipe.image // אם כבר יש URL, השתמש בו
+                recipe.image
             } else {
-                // אחרת, העלה את התמונה
                 val imageFile = getFileFromUri(context, recipe.image)
                 imageFile?.let { uploadImageAndGetUrl(it) }
             }
-
-            // יצירת אובייקט Recipe מעודכן
             val updatedRecipe = imageUrl?.let { recipe.copy(image = it) } ?: recipe
 
             val success = repository.updateRecipe(updatedRecipe)
@@ -209,9 +179,9 @@ class RecipeViewModel : ViewModel() {
     fun loadRecipe(recipeId: String) {
         viewModelScope.launch {
             try {
-                val recipeMap = repository.getRecipe(recipeId) // מחזיר Map<String, Any>
+                val recipeMap = repository.getRecipe(recipeId)
                 if (recipeMap != null) {
-                    val recipe = mapToRecipe(recipeMap) // המרת ה-Map לאובייקט Recipe
+                    val recipe = mapToRecipe(recipeMap)
                     Log.d("Recipe","recipe:"+recipe)
                     _selectedRecipe.value = recipe
                 } else {
@@ -235,7 +205,6 @@ class RecipeViewModel : ViewModel() {
         )
     }
 
-    // 4️⃣ מחיקת מתכון
     fun deleteRecipe(recipeId: String) {
         viewModelScope.launch {
             val success = repository.deleteRecipe(recipeId)
@@ -246,16 +215,14 @@ class RecipeViewModel : ViewModel() {
     fun fetchRandomRecipe(uid: String) : Boolean {
         return try {
             viewModelScope.launch {
-                    // שליפת המתכון האקראי מה-Repository
-                    val fetchedApiRecipe = recipeRepository.getRandomRecipe()
-                    Log.d("mashoo", fetchedApiRecipe.toString())
-                    if (fetchedApiRecipe == null) {
-                        return@launch
-                    }
-                    // המרת המתכון מ-ApiRecipeD ל-Recipe
-                    val fetchedRecipe = toRecipe(fetchedApiRecipe, uid)
-                    val success = repository.addRecipe(fetchedRecipe)
-                    if (success) fetchRecipes() // ריענון הנתונים אחרי הוספה
+                val fetchedApiRecipe = recipeRepository.getRandomRecipe()
+                if (fetchedApiRecipe == null) {
+                    return@launch
+                }
+
+                val fetchedRecipe = toRecipe(fetchedApiRecipe, uid)
+                val success = repository.addRecipe(fetchedRecipe)
+                if (success) fetchRecipes()
             }
             true
         } catch (e: Exception) {
@@ -265,34 +232,24 @@ class RecipeViewModel : ViewModel() {
     }
 
     fun toRecipe(apiRecipeD: ApiRecipeD, uid: String): Recipe {
-        // יצירת רשימה ריקה של מרכיבים
         val ingredientsList = mutableListOf<String>()
 
-        // איסוף המרכיבים מתוך שדות כמו strIngredient1, strIngredient2... strIngredient20
         for (i in 1..20) {
-            // יצירת שם השדה על פי מספר המרכיב
             val fieldName = "strIngredient$i"
 
-            // שים לב, זה מבוצע בעזרת reflection
             val field = apiRecipeD.javaClass.getDeclaredField(fieldName)
-            field.isAccessible = true // מאפשר גישה לשדה, גם אם הוא לא ציבורי
+            field.isAccessible = true
             val ingredient = field.get(apiRecipeD) as? String
 
-            // אם יש מרכיב, מוסיפים אותו לרשימה
             if (!ingredient.isNullOrBlank()) {
                 ingredientsList.add(ingredient)
             }
         }
-
-        // טיפול בבעיה אם strMeal או idMeal מגיעים כ-null
-        Log.d("Ingredients", (apiRecipeD.idMeal == null).toString())
-
-        // יצירת אובייקט Recipe עם ערך ברירת מחדל אם השדה null
         return Recipe(
-            id = apiRecipeD.idMeal ?: LocalDateTime.now().toString(),  // אם idMeal null, נשתמש ב-LocalDateTime
-            title = apiRecipeD.strMeal ?: "Unknown Title",  // אם strMeal null, נשתמש ב-"Unknown Title"
-            image = apiRecipeD.strMealThumb ?: "",  // אם strMealThumb null, נשתמש במיתר ריק
-            ingredients = ingredientsList,  // רשימת המרכיבים המורכבת
+            id = apiRecipeD.idMeal ?: LocalDateTime.now().toString(),
+            title = apiRecipeD.strMeal ?: "Unknown Title",
+            image = apiRecipeD.strMealThumb ?: "",
+            ingredients = ingredientsList,
             owner = uid,
             likes = 0
         )
@@ -302,7 +259,7 @@ class RecipeViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val commentsList = commentRepository.getCommentsForRecipe(recipeId)
-                _comments.value = commentsList // עדכון ה-LiveData ישירות ברשימת התגובות
+                _comments.value = commentsList
                 Log.d("viewmodel",commentsList.toString())
             } catch (e: Exception) {
                 Log.e("RecipeViewModel", "Error fetching comments for recipe $recipeId", e)

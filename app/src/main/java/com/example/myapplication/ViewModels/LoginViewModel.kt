@@ -1,12 +1,10 @@
-package com.example.myapplication.model
+package com.example.myapplication.ViewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.UserRepository
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,8 +37,6 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-
-    // פונקציה להתנתקות
     fun logoutUser() {
         userRepository.auth.signOut()
         _userId.postValue(null)

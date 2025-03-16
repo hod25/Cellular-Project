@@ -14,6 +14,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.myapplication.ViewModels.IngredientsViewModel
 
 class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
 
@@ -40,7 +41,7 @@ class IngredientsListFragment : Fragment(R.layout.fragment_ingredientlist) {
             items.clear()
             items.addAll(it)
             adapter.notifyDataSetChanged()
-            sharedViewModel.setIngredients(it) // עדכון ה-ViewModel עם הנתונים שהתקבלו
+            sharedViewModel.setIngredients(it)
         }
 
         sharedViewModel.ingredients.observe(viewLifecycleOwner) { newIngredients ->

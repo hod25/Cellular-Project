@@ -8,17 +8,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.myapplication.Adapter.CommentsAdapter
 import com.example.myapplication.model.Comment
-import com.example.myapplication.model.CommentViewModel
-import com.example.myapplication.model.RecipeViewModel
+import com.example.myapplication.ViewModels.CommentViewModel
+import com.example.myapplication.ViewModels.RecipeViewModel
 import android.widget.ListView
-import androidx.fragment.app.replace
 import com.squareup.picasso.Picasso
 
 class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
@@ -62,13 +58,13 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
                 val ingredientsFragment = IngredientsListFragment().apply {
                     arguments = Bundle().apply {
                         putStringArrayList("ingredients", ArrayList(it.ingredients))
-                        putBoolean("isViewRecipe", true) // מעביר את המידע אם מדובר ב-ViewRecipe
+                        putBoolean("isViewRecipe", true)
                     }
                 }
                 val tagsFragment = StaticTagsFragment().apply {
                     arguments = Bundle().apply {
                         putStringArrayList("tags", ArrayList(it.tags))
-                        putBoolean("isViewRecipe", true) // מעביר את המידע אם מדובר ב-ViewRecipe
+                        putBoolean("isViewRecipe", true)
                     }
                 }
                 likesTextView.text = it.likes.toString()
@@ -116,7 +112,6 @@ class ViewRecipeFragment : Fragment(R.layout.fragment_viewrecipe) {
                 val newLikes = currentLikes + 1
                 likesTextView.text = newLikes.toString()
 
-                // אפשר להוסיף כאן עדכון לייקים במסד נתונים או ב-ViewModel
                 recipeViewModel.addLike(recipeId)
                 likeClicked = true;
             }

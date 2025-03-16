@@ -1,7 +1,6 @@
 package com.example.myapplication.Adapter
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +8,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.example.myapplication.FeedFragmentDirections
 import com.example.myapplication.R
 import com.example.myapplication.model.RecipePreview
-import com.example.myapplication.model.RecipeViewModel
-import com.example.myapplication.model.UserViewModel
+import com.example.myapplication.ViewModels.RecipeViewModel
+import com.example.myapplication.ViewModels.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,12 +58,6 @@ class FeedAdapter(
             .fit()
             .centerCrop()
             .into(imageView)
-
-        //val recipePreviewFragment = RecipePreviewFragment()
-        //recipePreviewFragment.setRecipe(recipe)
-
-        //val commentAdapter = CommentsAdapter(context, recipe.comments) // ייתכן שתצטרך ליצור את CommentAdapter
-        //recipePreviewFragment.commentsListView?.adapter = commentAdapter
 
         view.setOnClickListener {
             Log.d("click","recipe "+recipe.id)

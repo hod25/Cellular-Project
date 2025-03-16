@@ -13,8 +13,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.Adapter.FeedAdapter
-import com.example.myapplication.model.RecipeViewModel
-import com.example.myapplication.model.UserViewModel
+import com.example.myapplication.ViewModels.RecipeViewModel
+import com.example.myapplication.ViewModels.UserViewModel
 
 class FeedFragment : Fragment() {
     private lateinit var viewModel: RecipeViewModel
@@ -50,12 +50,14 @@ class FeedFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // האזנה לתוצאות כדי לוודא עדכון של הרשימה כשחוזרים אחורה
+
         parentFragmentManager.setFragmentResultListener("refreshFeed", this) { _, _ ->
             refreshFeed()
         }
+
         viewModel.fetchRecipes() // שליפה מחדש מה-ViewModel
         refreshFeed()
+
         myMeals.setOnClickListener {
             if (myMeals.text == "My Meals") {
                 userViewModel.userId.value?.let { it1 -> viewModel.fetchMyRecipes(it1) }
@@ -71,7 +73,6 @@ class FeedFragment : Fragment() {
 
     private fun refreshFeed() {
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            // פעולות ברגע שמגיעים נתונים חדשים
             val recipePreviews = recipes?.let { viewModel.castRecipeToPreview(it) }
             if (recipePreviews != null) {
                 adapter.updateRecipes(recipePreviews)

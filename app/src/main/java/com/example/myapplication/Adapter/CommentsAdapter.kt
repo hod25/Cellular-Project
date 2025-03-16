@@ -1,7 +1,6 @@
 package com.example.myapplication.Adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,11 +30,10 @@ class CommentsAdapter(private val context: Context, var comments: List<Comment>)
 
         val comment = comments[position]
         textView.text = comment.content
-        // טיפול במקרה של ערך imageResId == -1
         if (comment.imageResId != -1) {
             imageView.setImageResource(comment.imageResId)
         } else {
-            imageView.setImageResource(R.drawable.avatar) // תוכל להגדיר תמונה ברירת מחדל
+            imageView.setImageResource(R.drawable.avatar)
         }
 
         return view

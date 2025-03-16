@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.ViewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -92,26 +92,6 @@ class CommentViewModel : ViewModel() {
             } catch (e: Exception) {
                 _error.value = "Error fetching comment"
                 Log.e("CommentViewModel", "Error fetching comment", e)
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    // Delete a comment
-    fun deleteComment(commentId: String) {
-        _isLoading.value = true
-        viewModelScope.launch {
-            try {
-                val isSuccess = repository.deleteComment(commentId)
-                if (isSuccess) {
-                    getAllComments() // Refresh the comments after deletion
-                } else {
-                    _error.value = "Failed to delete comment"
-                }
-            } catch (e: Exception) {
-                _error.value = "Error deleting comment"
-                Log.e("CommentViewModel", "Error deleting comment", e)
             } finally {
                 _isLoading.value = false
             }

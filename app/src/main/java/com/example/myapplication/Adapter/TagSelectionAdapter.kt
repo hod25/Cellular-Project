@@ -1,4 +1,4 @@
-    package com.example.myapplication.Adapter
+    /*package com.example.myapplication.Adapter
 
     import android.view.LayoutInflater
     import android.view.View
@@ -35,4 +35,4 @@
             }
         }
     }
-
+*/

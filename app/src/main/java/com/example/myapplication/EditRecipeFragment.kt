@@ -19,15 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.myapplication.model.Recipe
-import com.example.myapplication.model.RecipeViewModel
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
+import com.example.myapplication.ViewModels.RecipeViewModel
 import androidx.lifecycle.lifecycleScope
-import com.example.myapplication.model.UserViewModel
-import com.example.myapplication.utils.extensions.TagsViewModel
+import com.example.myapplication.ViewModels.IngredientsViewModel
+import com.example.myapplication.ViewModels.UserViewModel
+import com.example.myapplication.ViewModels.TagsViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 
@@ -60,10 +57,10 @@ class EditRecipeFragment : Fragment(R.layout.fragment_editrecipe) {
 
         IngredientsListFragment().apply {
             arguments = Bundle().apply {
-                putBoolean("isViewRecipe", false) // לא מדובר ב-ViewRecipe
+                putBoolean("isViewRecipe", false)
             }
         }
-        // מאזין לשינויים ברשימת המרכיבים
+
         ingredientsViewModel.ingredients.observe(viewLifecycleOwner) { ingredients ->
             ingredientsList = ingredients
         }

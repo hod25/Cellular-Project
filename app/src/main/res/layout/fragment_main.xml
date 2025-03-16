@@ -82,22 +82,6 @@
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/viewRecipeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#C813971A"
-        android:insetLeft="32dp"
-        android:insetRight="32dp"
-        android:insetBottom="24dp"
-        android:shadowColor="#000000"
-        android:shadowDx="8"
-        android:shadowDy="4"
-        android:shadowRadius="1.6"
-        android:text="@string/view_recipe"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
-    <Button
         android:id="@+id/createRecipeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

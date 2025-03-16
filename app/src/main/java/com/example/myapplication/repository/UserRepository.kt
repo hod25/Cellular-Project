@@ -1,15 +1,9 @@
 package com.example.myapplication.repository
 
-import android.net.Uri
 import android.util.Log
-import com.cloudinary.android.MediaManager
-import com.cloudinary.android.callback.ErrorInfo
-import com.cloudinary.android.callback.UploadCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.resume
 
 class UserRepository {
 
@@ -50,7 +44,6 @@ class UserRepository {
         }
     }
 
-    // שמירת פרטי המשתמש ב-Firestore
     suspend fun saveUserData(uid: String, firstName: String, lastName: String, email: String, image: String): Boolean {
         return try {
             val user = hashMapOf(

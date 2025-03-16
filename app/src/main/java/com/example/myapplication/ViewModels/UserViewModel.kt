@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package com.example.myapplication.ViewModels
 
 import android.content.Context
 import android.net.Uri
@@ -7,12 +7,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.repository.CloudinaryRepository
 import com.example.myapplication.repository.UserRepository
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.EmailAuthProvider
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -36,12 +33,10 @@ class UserViewModel : ViewModel() {
     val cloudinaryRepository = CloudinaryRepository()
     val collectionName = "UserImages"
 
-    // אתחול - בדיקת משתמש מחובר
     init {
         checkCurrentUser()
     }
 
-    // בדיקה אם יש משתמש מחובר
     private fun checkCurrentUser() {
         val currentUser = userRepository.auth.currentUser
         if (currentUser != null) {
@@ -50,7 +45,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    // פונקציה לטעינת פרטי המשתמש
     private fun loadUserData(uid: String) {
         viewModelScope.launch {
             val user = userRepository.getUserData(uid)
@@ -61,6 +55,7 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
     fun getFileFromUri(context: Context, uri: String): File? {
         val fileUri = Uri.parse(uri)
         val cursor = context.contentResolver.query(fileUri, null, null, null, null)
@@ -81,11 +76,9 @@ class UserViewModel : ViewModel() {
         return null
     }
 
-
     suspend fun uploadImageAndGetUrl(context:Context, image: String): String? {
         return try {
             val imageFile = getFileFromUri(context,image)
-            // העלאת התמונה ל-Cloudinary ומקבלת את ה-URL
             if (imageFile != null) {
                 cloudinaryRepository.uploadImage(imageFile, collectionName)?.replace("http://", "https://")
             }
@@ -97,30 +90,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    /*fun uploadImage(imageUri: Uri, userId: String) {
-        viewModelScope.launch {
-            val imageUrl = userRepository.uploadImageToCloudinary(imageUri)
-            if (imageUrl != null) {
-                userRepository.saveUserImage(userId, imageUrl)
-                _uploadImageUrl.postValue(imageUrl)
-            }
-        }
-    }*/
-
-    /*private fun saveImageUrlToFirestore(imageUrl: String?, currentUserId: String?) {
-        if (imageUrl == null || currentUserId == null) return
-
-        viewModelScope.launch {
-            val success = userRepository.saveUserImage(currentUserId, imageUrl)
-            if (success) {
-                println("Image URL saved successfully!")
-            } else {
-                println("Failed to save image URL")
-            }
-        }
-    }*/
-
-    // פונקציה להתנתקות
     fun logoutUser() {
         userRepository.auth.signOut()
         _userId.value = null

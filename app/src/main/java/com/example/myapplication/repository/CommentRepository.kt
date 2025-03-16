@@ -25,7 +25,7 @@ class CommentRepository {
     suspend fun addComment(comment: Comment): Boolean {
         return try {
             val docRef = database.collection("Comments").add(comment).await()
-            docRef.update("id", docRef.id) // 🔹 עדכון ה-ID במסמך
+            docRef.update("id", docRef.id)
             true
         } catch (e: Exception) {
             Log.e("Firebase", "Error adding Comment", e)
